@@ -1,0 +1,31 @@
+imports:
+    - { resource: config.yml }
+
+#doctrine:
+#    orm:
+#        metadata_cache_driver: apc
+#        result_cache_driver: apc
+#        query_cache_driver: apc
+
+monolog:
+    handlers:
+        main:
+            type:         fingers_crossed
+            action_level: error
+            handler:      nested
+        nested:
+            type:  stream
+            path:  "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+        console:
+            type:  console
+
+#web_profiler:
+    # put this parameter to true to get the toolbar in prod mode
+#    toolbar: false
+    # put this parameter to true to block redirects in prod mode
+#    intercept_redirects: false
+
+twig:
+    globals:
+        baseGetFileURL: "/SoundOrganiser/web/app.php/file/get"

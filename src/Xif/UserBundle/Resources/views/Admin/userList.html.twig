@@ -1,0 +1,58 @@
+{# src/Xif/UserBundle/Ressources/views/Admin/userList.html.twig #}
+
+{% extends 'XifUserBundle:Admin:layout.html.twig' %}
+
+{% block title %}Liste des utilisateurs – {{ parent() }}{% endblock %}
+
+{% block admin_content %}
+	<h3>Fichiers hébergés</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>Nom d'utilisateur</th>
+				<th>E-mail</th>
+				<th>Roles</th>
+				<th>Dernière connexion</th>
+				<th>Bloqué</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for user in users %}
+				<tr>
+					<td>{{ user.username }}</td>
+					<td>{{ user.email }}</td>
+					<td>{% for role in user.roles %}{{ role }}<br>{% endfor %}</td>
+					<td>{{ user.lastLogin|date('d/m/Y H:i:s') }}</td>
+					<td>
+						{% if user.locked %}
+							<span style="color: red;">Oui</span>
+						{% else %}
+							Non
+						{% endif %}
+					</td>
+					<td>
+						<a href="{{ path('xif_user_mailuser', {'id': user.id}) }}">Avertir</a><br>
+						<a href="{{ path('xif_user_lock', {'id': user.id}) }}">
+							{% if user.locked %}
+								Débloquer
+							{% else %}
+								Bloquer
+							{% endif %}
+						</a><br>
+						{% if is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+							<a href="{{ path('xif_user_promote', {'id': user.id}) }}">Rôles</a><br>
+						{% endif %}
+						{% if is_granted('ROLE_SUPER_ADMIN') %}
+							<a href="{{ path('xif_user_deleteuser', {'id': user.id }) }}">Supprimer</a>
+						{% endif %}
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="5">Pas d'utilisateurs inscrits.</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}

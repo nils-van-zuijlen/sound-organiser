@@ -1,0 +1,45 @@
+{# src/OC/CoreBundle/Resources/views/Default/index.html.twig #}
+
+{% extends "XifCoreBundle::layout.html.twig" %}
+
+{% block title %}
+	Crédits – {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<article>
+		<h2>Crédits</h2>
+		<dl>
+			<dt>Idée originale</dt>
+			<dd>Félix FAISANT</dd>
+
+			<dt>Réalisation</dt>
+			<dd>Nils VAN ZUIJLEN</dd>
+
+			<dt>Police principale</dt>
+			<dd>
+				<a href="//www.nymfont.com/2009/05/sans-serif-experiments.html">Champagne &amp; Limousines</a>,
+				by <a href="//www.nymfont.com/">Lauren THOMPSON</a>
+			</dd>
+
+			<dt>Design</dt>
+			<dd>
+				<dl>
+					<dt>Site</dt>
+					<dd>Nils VAN ZUIJLEN</dd>
+					<dt>Page de lecture</dt>
+					<dd>Félix FAISANT</dd>
+				</dl>
+			</dd>
+
+			<dt>Framework</dt>
+			<dd><a href="//symfony.com">Symfony</a></dd>
+
+			<dt>Gestion des utilisateurs</dt>
+			<dd>Friends Of Symfony UserBundle</dd>
+
+			<dt>Hébergement</dt>
+			<dd><a href="//network.xif.fr">Xif Network</dd>
+		</dl>
+	</article>
+{% endblock %}

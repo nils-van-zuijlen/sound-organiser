@@ -1,0 +1,11 @@
+
+{% extends 'XifCoreBundle::layout.html.twig' %}
+
+{% block title %}Actualités – {{ parent() }}{% endblock %}
+
+{% block body %}
+	<article class="asideNext">
+		<h2>Actualités</h2>
+		{% block actus_content %}{% endblock actus_content %}
+	</article>
+{% endblock %}

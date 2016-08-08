@@ -1,0 +1,49 @@
+xif_user_homepage:
+    path:     /
+    defaults:
+        _controller: XifUserBundle:Admin:index
+    methods: GET
+
+xif_user_deleteuser:
+    path:     /delete/{id}
+    defaults:
+        _controller: XifUserBundle:Admin:deleteUser
+    requirements:
+        id: \d*
+    methods: GET
+
+xif_user_mailuser:
+    path:     /mail/{id}
+    defaults:
+        _controller: XifUserBundle:Admin:mail
+    requirements:
+        id: \d*
+    methods: GET|POST
+
+xif_user_promote:
+    path:     /promote/{id}
+    defaults:
+        _controller: XifUserBundle:Admin:promote
+    requirements:
+        id: \d*
+    methods: GET|POST
+
+xif_user_viewfiles:
+    path:     /files
+    defaults:
+        _controller: XifFileBundle:File:list
+    methods: GET
+
+xif_user_viewusers:
+    path:     /users
+    defaults:
+        _controller: XifUserBundle:Admin:userList
+    methods: GET
+
+xif_user_lock:
+    path:     /lock/{id}
+    defaults:
+        _controller: XifUserBundle:Admin:lock
+    requirements:
+        id: \d*
+    methods: GET

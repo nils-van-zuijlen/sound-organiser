@@ -1,0 +1,16 @@
+{# app/Resources/TwigBundle/views/Exceptions/error.html.twig #}
+
+{% extends "XifCoreBundle::layout.html.twig" %}
+
+{% block title %}
+	Erreur {{ status_code }} – {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<article>
+		<h2>Erreur {{ status_code }}: {{ status_text }}</h2>
+		<p>
+			Une erreur est survenue. Veuillez nous <a href="mail:{{ webmaster_mail }}">en informer</a> si elle se répete en précisant ce que vous étiez en train de faire.
+		</p>
+	</article>
+{% endblock %}

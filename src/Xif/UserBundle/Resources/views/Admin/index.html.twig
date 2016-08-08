@@ -1,0 +1,24 @@
+{# src/Xif/UserBundle/Ressources/views/Admin/index.html.twig #}
+
+{% extends 'XifUserBundle:Admin:layout.html.twig' %}
+
+{% block title %}Accueil – {{ parent() }}{% endblock %}
+
+{% block admin_content %}
+	<h3>Bienvenue sur les pages d'administration</h3>
+	<p>Vous pouvez, selon votre rang :</p>
+	<ul>
+		<li>Lister les utilisateurs</li>
+		<li>Envoyer des mails aux utilisateurs</li>
+		<li>Supprimer des utilisateurs</li>
+		<li>Modifier le rang des utilisateurs</li>
+		<li>Désactiver des utilisateurs</li>
+		<li>Lister les fichiers</li>
+		<li>Lire des fichiers</li>
+		<li>Supprimer des fichiers</li>
+		<li>Envoyer des mails aux propriétaires des fichiers</li>
+		<li>Lister tous les projets</li>
+		<li>Afficher tous les projets</li>
+		<li>Publier une actualité</li>
+	</ul>
+{% endblock %}

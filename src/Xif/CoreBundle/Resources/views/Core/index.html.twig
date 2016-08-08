@@ -1,0 +1,55 @@
+{# src/OC/CoreBundle/Resources/views/Default/index.html.twig #}
+
+{% extends "XifCoreBundle::layout.html.twig" %}
+
+{% block body %}
+	<aside class="a-list">
+		{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+			<a href="{{ path('xif_soundorganiser_homepage') }}">
+				Mes projets
+			</a>
+			<a href="{{ path('xif_soundorganiser_makeprojectpage') }}">
+				Nouveau projet
+			</a>
+			<a href="{{ path('xif_soundorganiser_downloadpage') }}">
+				Télécharger la version offline
+			</a>
+		{% endif %}
+		{#<a href="{{ path('xif_core_explorepage') }}">
+			Explorer les projets publics
+		</a>#}
+		<a href="{{ path('xif_core_help') }}">
+			Aide
+		</a>
+	</aside>
+	<article>
+		<article class="asideNext">
+			<h2 style="margin-top: 0;">Accueil</h2>
+			<p>
+				SoundOrganiser est une solution gratuite pour la diffusion de musique lors d'évenements.
+			</p>
+			<h3>Fonctionnalités</h3>
+			<ul>
+				<li>Lecture de fichiers aux formats mp3 et ogg</li>
+				<li>Fondu en sortie et/ou en entrée</li>
+				<li>Lecture aléatoire</li>
+				<li>Lancement automatique du son suivant si besoin</li>
+				<li>Arrèt / lancement pendant la lecture avec fondus</li>
+				<li>Vitesse de fondu sélectionnable</li>
+				<li>Modification du volume sans bruits parasites et progressivement.</li>
+				<li>Contrôle intégral au clavier</li>
+			</ul>
+		</article>
+		{% for actu in actus %}
+			<article class="asideNext mt">
+				<h3><a href="{{ path('xif_core_viewactu', {'id': actu.id}) }}">{{ actu.titre }}</a></h3>
+				{{ actu.contenu|raw }}
+				<hr>
+				<p>
+					Écrit par {{ actu.auteur.username }} le {{ actu.datePublication|date('d/m/Y à H:i') }}.
+				</p>
+			</article>
+		{% endfor %}
+		<p><a href="{{ path('xif_core_viewactu', {'id': 1}) }}">Toutes les actus</a></p>
+	</article>
+{% endblock %}

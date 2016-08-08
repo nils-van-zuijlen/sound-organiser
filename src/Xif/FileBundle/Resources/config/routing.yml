@@ -1,0 +1,30 @@
+xif_file_get:
+    path:     /get/{id}.{admin}
+    defaults:
+        _controller: XifFileBundle:File:getFile
+        admin:       false
+    requirements:
+        id:    \d*
+        admin: true|false
+    methods: GET|HEAD
+
+xif_file_add:
+    path:     /add
+    defaults:
+        _controller: XifFileBundle:File:addFile
+    methods: POST|GET
+
+xif_file_remove:
+    path:     /remove/{id}.{admin}
+    defaults:
+        _controller: XifFileBundle:File:removeFile
+        admin:       false
+    requirements:
+        admin: true|false
+    methods: GET
+
+xif_file_getmine:
+    path:     /get/mine
+    defaults:
+        _controller: XifFileBundle:File:getMine
+    methods: GET

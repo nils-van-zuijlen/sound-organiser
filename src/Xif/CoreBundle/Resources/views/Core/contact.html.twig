@@ -1,0 +1,40 @@
+{# src/Xif/CoreBundle/Resources/views/Core/contact.html.twig #}
+
+{% extends "XifCoreBundle::layout.html.twig" %}
+
+{% block title %}
+	Contact – {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<article>
+		<h2>Contact</h2>
+		{#{ form(form) }#}
+
+		{{ form_start(form) }}
+			{{ form_errors(form, {'attr': {'class': 'form-error'} }) }}
+			<div class="form-group">
+				{{ form_label(form.senderName, 'Nom, Prénom') }}
+				{{ form_errors(form.senderName, {'attr': {'class': 'form-error'} }) }}
+				{{ form_widget(form.senderName) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(form.senderMail, 'E-mail') }}
+				{{ form_errors(form.senderMail, {'attr': {'class': 'form-error'} }) }}
+				{{ form_widget(form.senderMail) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(form.subject, 'Objet') }}
+				{{ form_errors(form.subject, {'attr': {'class': 'form-error'} }) }}
+				{{ form_widget(form.subject) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(form.body, 'Message') }}
+				{{ form_errors(form.body, {'attr': {'class': 'form-error'} }) }}
+				{{ form_widget(form.body) }}
+			</div>
+			{{ form_widget(form.send)}}
+			{{ form_rest(form) }}
+		{{ form_end(form) }}
+	</article>
+{% endblock %}

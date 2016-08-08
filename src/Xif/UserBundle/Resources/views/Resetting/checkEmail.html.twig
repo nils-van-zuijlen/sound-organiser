@@ -1,0 +1,10 @@
+{% extends "XifUserBundle::layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+	<h2>Réinitialiser le mot de passe</h2>
+	<p>
+		{{ 'resetting.check_email'|trans({'%email%': email}) }}
+	</p>
+{% endblock %}

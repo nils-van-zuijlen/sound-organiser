@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="48"
+   height="48"
+   viewBox="0 0 48 48"
+   id="svg5598"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="soundorganiser.svg"
+   inkscape:export-filename="/home/nils/Bureau/soundorganiser.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs5600" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="11.2"
+     inkscape:cx="15.065599"
+     inkscape:cy="25.639013"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     units="px"
+     inkscape:snap-nodes="false"
+     inkscape:snap-others="false"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true"
+     inkscape:window-width="975"
+     inkscape:window-height="744"
+     inkscape:window-x="49"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid5606"
+       empspacing="5" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5603">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-1004.3622)">
+    <circle
+       style="fill:#000000;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path5615"
+       cx="11"
+       cy="1042.3622"
+       r="9" />
+    <circle
+       style="fill:#000000;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path5617"
+       cx="36.839287"
+       cy="1039.255"
+       r="9" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:4.25913429;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 16.730924,1041.5182 0,-32.9619 0,0 26.966723,0 0,32.9619"
+       id="path5621"
+       inkscape:connector-curvature="0" />
+    <path
+       sodipodi:type="star"
+       style="fill:#000000;stroke:#000000;stroke-width:4;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path6425"
+       sodipodi:sides="3"
+       sodipodi:cx="27.844997"
+       sodipodi:cy="1022.7716"
+       sodipodi:r1="11.077187"
+       sodipodi:r2="5.5385938"
+       sodipodi:arg1="-0.032246882"
+       sodipodi:arg2="1.0149507"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 38.916425,1022.4145 -8.148923,5.0619 -8.148924,5.0619 -0.309295,-9.5881 -0.309294,-9.5882 8.458218,4.5263 z"
+       inkscape:transform-center-x="-1.9978972"
+       inkscape:transform-center-y="-0.011395101"
+       transform="matrix(0.72501882,0.02274075,-0.02571412,0.64118351,34.602868,364.39395)" />
+  </g>
+</svg>

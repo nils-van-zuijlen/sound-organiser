@@ -1,0 +1,10 @@
+{# src/Xif/UserBundle/Ressources/views/Admin/userList.html.twig #}
+
+{% extends 'XifCoreBundle:Actus:layout.html.twig' %}
+
+{% block title %}Modifier – {{ parent() }}{% endblock %}
+
+{% block actus_content %}
+	<h4>Modifier</h4>
+	{% include "XifCoreBundle:Actus:form.html.twig" %}
+{% endblock %}

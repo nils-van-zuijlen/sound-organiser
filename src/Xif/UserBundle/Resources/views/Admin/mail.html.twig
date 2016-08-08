@@ -1,0 +1,10 @@
+{# src/Xif/UserBundle/Ressources/views/Admin/userList.html.twig #}
+
+{% extends 'XifUserBundle:Admin:layout.html.twig' %}
+
+{% block title %}Envoyer un mail à {{ user.username }} – {{ parent() }}{% endblock %}
+
+{% block admin_content %}
+	<h3>Envoyer un mail à {{ user.username }}</h3>
+	{{ form(form) }}
+{% endblock %}

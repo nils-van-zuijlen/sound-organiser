@@ -1,0 +1,10 @@
+{# src/Xif/UserBundle/Ressources/views/Admin/userList.html.twig #}
+
+{% extends 'XifUserBundle:Admin:layout.html.twig' %}
+
+{% block title %}Rôles de {{ user.username }} – {{ parent() }}{% endblock %}
+
+{% block admin_content %}
+	<h3>Rôles de {{ user.username }}</h3>
+	{{ form(form) }}
+{% endblock %}

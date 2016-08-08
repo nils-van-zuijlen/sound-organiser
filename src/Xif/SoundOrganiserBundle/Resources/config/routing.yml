@@ -1,0 +1,51 @@
+# scr/Xif/SoundOrganiserBundle/Resources/config/routing.yml
+
+xif_soundorganiser_homepage:
+    path:    /
+    defaults:
+        _controller: XifSoundOrganiserBundle:SoundOrganiser:index
+    methods: GET
+
+xif_soundorganiser_makeprojectpage:
+    path:    /new
+    defaults:
+        _controller: XifSoundOrganiserBundle:SoundOrganiser:new
+    methods: GET
+
+xif_soundorganiser_downloadpage:
+    path:    /download_offline
+    defaults:
+        _controller: XifSoundOrganiserBundle:SoundOrganiser:index
+    methods: GET
+
+xif_soundorganiser_playpage:
+    path:    /{id}/play.{admin}
+    defaults:
+        _controller: XifSoundOrganiserBundle:SoundOrganiser:play
+        admin: false
+    requirements:
+        id: \d*
+        admin: true|false
+    methods: GET
+
+xif_soundorganiser_edit:
+    path:    /{id}
+    defaults:
+        _controller: XifSoundOrganiserBundle:SoundOrganiser:edit
+    requirements:
+        id: \d*
+    methods: GET
+
+xif_soundorganiser_editajax:
+    path:    /{projId}
+    defaults:
+        _controller: XifSoundOrganiserBundle:SoundOrganiser:editAjax
+    methods: POST
+
+xif_soundorganiser_delete:
+    path:    /{id}/delete
+    defaults:
+        _controller: XifSoundOrganiserBundle:SoundOrganiser:delete
+    requirements:
+        id: \d*
+    methods: GET

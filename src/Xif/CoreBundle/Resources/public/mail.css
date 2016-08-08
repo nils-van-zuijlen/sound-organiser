@@ -1,0 +1,107 @@
+@font-face {
+	font-family: Champagne;
+	src: url('fonts/champagne-bold-webfont.eot');
+	src: url('fonts/champagne-bold-webfont.eot?#iefix') format('embedded-opentype'),
+		 url('fonts/champagne-bold-webfont.woff2') format('woff2'),
+		 url('fonts/champagne-bold-webfont.woff') format('woff'),
+		 url('fonts/champagne-bold-webfont.ttf') format('truetype'),
+		 url('fonts/champagne-bold-webfont.svg#champagne__limousinesbold') format('svg');
+	font-weight: bold;
+	font-style: normal;
+}
+
+* {
+	font-family: Champagne, Arial, Verdana, sans-serif;
+	font-weight: bold;
+}
+
+html {
+	font-family: Champagne, Arial, Verdana, sans-serif;
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	height: 100%;
+}
+
+a {
+	color: #111;
+}
+
+/* Header */
+header {
+	display: flex;
+	background-color: #0D7E0D;
+	padding: 1em;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+header > h1 {
+	margin: 0;
+}
+header > h1 > a {
+	color: #000000;
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+}
+header > h1 img {
+	height: 1.25em;
+	margin-right: 0.5em;
+	width: auto;
+}
+header > nav {
+	margin-right: 1em;
+	margin-left: 1em;
+	margin-top: 0;
+	margin-bottom: 0;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+		-webkit-flex-wrap: wrap;
+		-moz-flex-wrap: wrap;
+		-ms-flex-wrap: wrap;
+		-o-flex-wrap: wrap;
+		
+}
+header > nav > a {
+	display: block;
+	padding: 0.25em;
+	text-decoration: none;
+	font-weight: bold;
+	border: transparent solid 1px;
+	border-radius: 3px;
+	margin: 0.25em;
+	color: white;
+}
+header > nav > a:hover {
+	border-color: lightgrey;
+}
+
+/* footer */
+footer {
+	background-color: #0D7E0D;
+	padding: 1em;
+	height: 4em;
+}
+footer p {
+	margin: 0;
+	text-align: center;
+}
+#push {
+	height: 6em;
+}
+#wrap {
+	min-height: 100%;
+	margin: 0 auto -6em;
+}
+
+/* affichage des tableaux */
+table {
+	border-collapse: collapse;
+}
+td, th {
+	border: solid 1px black;
+	padding: 3px;
+}

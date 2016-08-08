@@ -1,0 +1,81 @@
+{# src/Xif/SoundOrganiserBundle/Resources/views/Default/playPage.html.twig #}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>{{ project.title }} – Playing – SoundOrganiser</title>
+	<link rel="icon" href="{{ asset('bundles/xifcore/icon.svg') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('bundles/xifsoundorganiser/playPage.css') }}">
+</head>
+<body>
+	<noscript>
+		Veuillez activer le JavaScript afin de profiter des fonctionnalités de ces pages
+	</noscript>
+	<div id="opened">
+		<h1 id="h1">{{ project.title }}</h1>
+		<a href="{{ path('xif_soundorganiser_edit', {'id': project.id}) }}" id="quit">Éditer</a>
+
+		<section>
+			<div id="div_sons">
+				<h2>Sons: </h2>
+				<ol id="sound_list">
+					{% for song in project.songLines %}
+						<li>
+							<song>{{ song.name }}</song>
+							<descr>{{ song.description }}</descr>
+							<span></span>
+						</li>
+					{% endfor %}
+				</ol>
+			</div>
+
+			<div id="div_lecture">
+				<div id="lecteur">
+					<audio controls id="player">
+						<span title="Il ne supporte pas le HTML5">
+							Votre navigateur n'est pas à jour.
+						</span><br/>
+						<a href="//lmgtfy.com?q=Mettre+mon+navigateur+web+à+jour">
+							Comment le mettre à jour?
+						</a>
+					</audio><br/>
+
+					<output id="song_title" class="song_title">
+						{{ project.songLines[0].name }}
+					</output><br/>
+					<output id="song_descr" class="song_descr">
+						{{ project.songLines[0].description }}
+					</output><br/>
+					<output id="song_trans" class="song_trans"></output><br/>
+				</div>
+				<hr/>
+
+				<div id="next_info">
+					<h2>Suivant:</h2>
+					<output id="next_title" class="song_title">
+						{% if project.songLines[1] is defined %}
+							{{ project.songLines[1].name }}
+						{% endif %}
+					</output><br/>
+					<output id="next_descr" class="song_descr">
+						{% if project.songLines[1] is defined %}
+							{{ project.songLines[1].description }}
+						{% endif %}
+					</output><br/>
+					<output id="next_trans" class="song_trans"></output><br/>
+				</div>
+
+			</div>
+
+		</section>
+	</div>
+
+	<script src="{{ asset('bundles/xifsoundorganiser/playPage.js')}}"></script>
+	<script>
+		PROJECT = {{ project.json|raw }};
+		baseURL = "{{ baseGetFileURL|raw }}";
+		open_proj();
+	</script>
+</body>
+</html>

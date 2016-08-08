@@ -1,0 +1,65 @@
+{% trans_default_domain 'FOSUserBundle' %}
+{% block subject %}
+{% autoescape false %}
+{{ 'resetting.email.subject'|trans({'%username%': user.username}) }}
+{% endautoescape %}
+{% endblock %}
+{% block body_text %}
+========= SoundOrganiser =========
+
+{% autoescape false %}
+{{ 'resetting.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}) }}
+{% endautoescape %}
+
+
+※ [Conditions d'utilisation]({{ url('xif_core_conditionspage') }})
+※ [Contact]({{ url('xif_core_contact') }})
+
+––––––––––––––––––––––––––––––––––
+
+©2016 and after, Nils VAN ZUIJLEN
+{% endblock %}
+{% block body_html %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="{{ absolute_url(asset('bundles/xifcore/mail.css')) }}" />
+</head>
+<body>
+	<div id="wrap">
+		<header>
+			<h1>
+				<a href="{{ url('xif_core_homepage') }}" style="color: black;">
+					<img src="{{ absolute_url(asset('bundles/xifcore/icon.svg')) }}">
+					SoundOrganiser
+				</a>
+			</h1>
+			<div></div>
+		</header>
+
+		<section>
+			<p>
+				{{ 'resetting.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}|) }}
+			</p>
+		</section>
+		
+		<div id="push"></div>
+	</div>
+
+	<footer>
+		<p>
+			※
+			<a href="{{ url('xif_core_conditionspage') }}">Conditions d'utilisation</a>
+			※
+			<a href="{{ url('xif_core_contact') }}">Contact</a>
+			※
+		</p>
+		<hr />
+		<p>
+			©2016 and after, Nils VAN ZUIJLEN
+		</p>
+	</footer>
+</body>
+</html>
+{% endblock %}

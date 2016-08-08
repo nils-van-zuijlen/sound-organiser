@@ -1,0 +1,97 @@
+{# src/Xif/CoreBundle/Ressources/views/layout.html.twig #}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>{% block title %}SoundOrganiser{% endblock %}</title>
+	{% block styles %}
+		<link rel="stylesheet" href="{{ asset('bundles/xifcore/style.css') }}" />
+	{% endblock %}
+	<link rel="icon" type="image/svg" href="{{ asset('bundles/xifcore/icon.svg') }}" />
+	<link rel="icon" href="{{ asset('bundles/xifcore/icon.png') }}" type="image/png" />
+</head>
+<body>
+	<div id="wrap">
+		{% if app.session.flashbag.get('info') is not empty %}
+			<div id="flash_messages">
+				{% for item in app.session.flashbag.get('info') %}
+					<p>{{ item }}</p>
+				{% endfor %}
+			</div>
+			<script>
+				(function() {
+					var messagesFlashs = document.getElementById('flash_messages');
+					if (messagesFlashs) {
+						messagesFlashs.addEventListener('click', function() {
+							messagesFlashs.style = 'display: none;';
+						});
+						if (!messagesFlashs.firstElementChild) {
+							messagesFlashs.style = 'display: none;';
+						}
+						setTimeout(function() {
+							messagesFlashs.style = 'display: none;';
+						}, 5000);
+					}
+				})();
+			</script>
+		{% endif %}
+		
+		<header>
+			<h1>
+				<a href="{{ path('xif_core_homepage') }}" style="color: black;">
+					<img src="{{ asset('bundles/xifcore/icon.svg') }}">
+					SoundOrganiser
+				</a>
+			</h1>
+			<nav>
+				{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+					<a href="{{ path('fos_user_profile_show')}}">
+						Mon compte
+					</a>
+					<a href="{{ path('fos_user_security_logout') }}">
+						Se déconnecter
+					</a>
+					{% if is_granted('ROLE_ADMIN') %}
+						<a href="{{ path('xif_user_homepage') }}">
+							Administration
+						</a>
+					{% endif %}
+				{% else %}
+					<a href="{{ path('fos_user_security_login') }}">
+						Se connecter
+					</a>
+					<a href="{{ path('fos_user_registration_register') }}">
+						Créer un compte
+					</a>
+				{% endif %}
+			</nav>
+			<noscript>
+				Veuillez activer le JavaScript (ou scripts ActiveX) afin de profiter des fonctionnalités de ces pages
+			</noscript>
+		</header>
+
+		<section>{% block body %}{% endblock %}</section>
+		
+		<div id="push"></div>
+	</div>
+
+	<footer>
+		<p>
+			※
+			<a href="{{ path('xif_core_creditspage') }}">Crédits</a>
+			※
+			<a href="{{ path('xif_core_conditionspage') }}">Conditions d'utilisation</a>
+			※
+			<a href="{{ path('xif_core_contact') }}">Contact</a>
+			※
+		</p>
+		<hr />
+		<p>
+			©2016 and after, Nils VAN ZUIJLEN
+		</p>
+	</footer>
+
+	{% block scripts %}{% endblock %}
+</body>
+</html>

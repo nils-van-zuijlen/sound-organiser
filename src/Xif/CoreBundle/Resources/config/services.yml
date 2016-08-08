@@ -1,0 +1,7 @@
+services:
+#    xif_core.example:
+#        class: Xif\CoreBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]
+
+parameters:
+    nb_per_page: 10

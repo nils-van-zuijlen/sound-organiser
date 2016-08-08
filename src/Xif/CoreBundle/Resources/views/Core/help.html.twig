@@ -1,0 +1,369 @@
+{# src/Xif/SoundOrganiserBundle/Ressources/views/Default/help.html.twig #}
+
+{% extends "XifCoreBundle::layout.html.twig" %}
+
+{% block title %}Help - {{ parent() }}{% endblock %}
+
+{% block styles %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('bundles/xifsoundorganiser/help.css') }}" />
+{% endblock %}
+
+{% block body %}
+<article>
+	<h2>Aide</h2>
+	<div>
+		<h3>Que suis-je?</h3>
+		<p>
+			SoundOrganiser est une solution de diffusion de musique / sons pour le théâtre. C'est à dire qu'il été optimisé pour le théâtre, ceci ne veut pas dire qu'il est impossible de l'employer autre part.
+		</p>
+	</div>
+	<div id="quand">
+		<h3>Quand utiliser SoundOrganiser ici?</h3>
+		<p>
+			Utilisez le quand vous avez trouvé quelles, quand et comment s'organisent les musiques de votre pièce. Vous pourrez alors visiter <a href="{{ path('xif_soundorganiser_makeprojectpage') }}">cette page</a>	afin de créer votre fichier project.theatre
+			<br/>
+
+			<img src="{{ asset('bundles/xifsoundorganiser/info.png') }}" class="hint">
+			<hint>
+				Pensez à découper vos bandes son et à les mettre au format MP3 (.mp3) ou Ogg Vorbis (.ogg).
+			</hint>
+		</p>
+	</div>
+	<div id="transmettre">
+		<h3>
+			Que transmettre à
+			<a href="{#{ path('xif_soundorganiser_transfertpage') }#}#transmettre">la page de transfert</a>
+			?
+		</h3>
+		<p>
+			Il faut lui transmettre votre <a href="#makeproj">fichier project.theatre</a> (pas un autre, ça ne fonctionne pas), et vos fichiers sons aux formats MP3 ou Ogg Vorbis.
+		</p>
+	</div>
+	<div id="emploi">
+		<h3>Comment ça marche?</h3>
+		<h4 id="emploi_commands">Les commandes disponibles</h4>
+		<dl>
+			<div class="def">
+				<dt id="emploi_commands_space">L'appui sur la barre d'espace</dt>
+				<dd>
+					L'appui sur la barre d'espace permet:<br/>
+					<ul>
+						<li>
+							Le lancement du son
+						</li>
+						<li>
+							L'arret du son pendant la lecture (sauf si la <a href="#emploi_trans">transition</a> est <a href="#emploi_trans_full">Full</a>)
+						</li>
+						<li>
+							Le redémarrage du son si le <a href="#emploi_type">type</a> est <a href="#emploi_type_repeat">Repeat</a>
+						</li>
+						<li>
+							La poursuite de la lecture si le <a href="#emploi_type">type</a> est <a href="#emploi_type_restart">Restart</a>
+						</li>
+					</ul>
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="emploi_commands_v">L'appui sur la touche V</dt>
+				<dd>
+					L'appui sur la touche V diminue progressivement le volume.
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="emploi_commands_b">L'appui sur la touche B</dt>
+				<dd>
+					L'appui sur la touche B augmente progressivement le volume.
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="emploi_commands_right">L'appui sur la flèche droite</dt>
+				<dd>
+					L'appui sur la flèche droite arrète le son actuel en respectant la <a href="#emploi_trans">transition</a> si celui-ci est en cours de lecture, puis charge le son suivant et le lance en cas d'<a href="#emploi_trans_autonext">autonext</a>.
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="emploi_commands_left">L'appui sur la flèche gauche</dt>
+				<dd>
+					L'appui sur la flèche gauche arrète le son si celui-ci est en cours et le remet au début. Si le son est déjà au début, cette action charge le son précédent.
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="emploi_commands_a">L'appui sur la touche A</dt>
+				<dd>
+					<img src="{{ asset('bundles/xifsoundorganiser/info.png') }}" class="hint">
+					<hint>
+						Disponible uniquement en mode <a href="#offline">offline.</a>
+					</hint><br/>
+
+					L'appui sur la touche A ferme le projet après confirmation.
+				</dd>
+			</div>
+		</dl>
+		<p>
+			Le comportement de la page est différent en fonction des types et des transitions du son actuel.
+		</p>
+		<h4 id="emploi_type">
+			Les différents types disponibles et leurs effets
+		</h4>
+		<dl>
+			<div class="def">
+				<dt id="emploi_type_one">One</dt>
+				<dd>
+					Le son est joué une seule fois. Il est possible de l'arréter sauf si la <a href="#emploi_trans">transition</a> est <a href="#emploi_trans_full">Full</a>.
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="emploi_type_repeat">Repeat</dt>
+				<dd>
+					L'appui sur la barre d'espace quand le son est à l'arrèt (au début, au milieu ou à la fin) redémarre le son.
+					Si l'<a href="#emploi_trans_autonext">autonext 1</a> est actif, le son recommence une fois arrivé à la fin.
+					Il est possible d'arréter le son pendant la lecture sauf si une <a href="#emploi_trans">transition</a> est à <a href="#emploi_trans_full">Full</a>.
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="emploi_type_restart">Restart</dt>
+				<dd>
+					Lors de l'appui sur la barre d'espace, le son est mis en pause. Il est possible de  continuer la lecture en réappuyant sur cette barre.<br/>
+					<img src="{{ asset('bundles/xifsoundorganiser/info.png') }}" class="hint">
+					<hint>
+						Il est déconseillé d'appliquer une <a href="#emploi_trans">transition</a> <a href="#emploi_trans_full">Full</a> à un son de type Restart. (Ceci inhibe la fonction Restart.)
+					</hint><br/>
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="emploi_type_random">Random</dt>
+				<dd>
+					Le type Random se comporte comme le type <a href="#emploi_type_one">One</a> au niveau de la lecture.<br/>
+					Ce type est spécial dans la mesure où il ne définit pas comment mais quel son jouer.
+					En effet, il choisit aléatoirement un fichier dans ceux du projet.<br/>
+					<img src="{{ asset('bundles/xifsoundorganiser/info.png') }}" class="hint">
+					<hint>
+						Il faut donc lui donner un fichier pour ne pas obtenir d'erreurs.
+					</hint>
+				</dd>
+			</div>
+		</dl>
+		<br/>
+		<h4 id="emploi_trans">Les différentes transitions disponibles et leurs effets</h4>
+		<p>
+			Chaque son peut avoir deux transitions:
+		</p>
+		<ol>
+			<li>
+				La première est facultative et sert pour les sons de <a href="#emploi_type">type</a> <a href="#emploi_type_repeat">Repeat</a> et <a href="#emploi_type_restart">Restart</a>.<br/>
+				Elle définit comment le son va s'arréter pendant la lecture et recommencer.
+			</li>
+			<li>
+				La seconde est obligatoire et définit comment le son va s'arréter si la première est omise.
+			</li>
+		</ol>
+		<p>
+			Ces transitions peuvent être:
+		</p>
+		<dl>
+			<div class="def">
+				<dt id="emploi_trans_raw">Raw</dt>
+				<dd>
+					Arret / démarrage brusque (similaire à l'appui sur le bouton "play")
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="emploi_trans_quickfadeout">Quickfadeout</dt>
+				<dd>
+					Fondu très rapide lors de l'arrèt / démarrage.
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="emploi_trans_fadeout">Fadeout</dt>
+				<dd>
+					Fondu rapide lors de l'arrèt / démarrage.
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="emploi_trans_longfadeout">Longfadeout</dt>
+				<dd>
+					Fondu lent lors de l'arrèt / démarrage.
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="emploi_trans_full">Full</dt>
+				<dd>
+					Avec une <a href="#emploi_trans">transition</a> à Full, le son est lu complètement.
+					Il n'est donc pas possible de le mettre en pause au milieu.<br/>
+
+					<img src="{{ asset('bundles/xifsoundorganiser/info.png') }}" class="hint">
+					<hint>
+						Il est fortement déconseillé d'avoir une <a href="#emploi_trans">transition</a> Full avec un <a href="#emploi_type">type</a> autre que <a href="#emploi_type_one">One</a> ou <a href="#emploi_type_random">Random</a>.
+					</hint>
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="emploi_trans_autonext">Autonext</dt>
+				<dd>
+					L'autonext est une <a href="#emploi_trans">transition</a> spéciale.<br/>
+					En effet, il se comporte différemment suivant son emplacement et il peut être combiné avec une autre <a href="#emploi_trans">transition</a>.
+					<dl>
+						<div class="defsub">
+							<dt>Position 1</dt>
+							<dd>
+								Son utilité en position 1 n'est justifiée que par un <a href="#emploi_type">type</a> <a href="#emploi_type_repeat">Repeat</a>.<br/>
+								Lorsqu'il est employé en position 1, l'autonext définit si le son recommence la lecture une fois fini.
+							</dd>
+						</div>
+
+						<div class="defsub">
+							<dt>Position 2</dt>
+							<dd>
+								Lorsqu'il est employé en position 2, l'autonext charge et démarre le son suivant lors de l'arret du son en lecture (peu importe que l'arrèt se fasse au milieu où a la fin du son.)
+							</dd>
+						</div>
+					</dl>
+				</dd>
+			</div>
+		</dl>
+	</div>
+	<div id="makeproj">
+		<h3>Comment créer un fichier project.theatre?</h3>
+		<p>
+			Visitez <a href="{{ path('xif_soundorganiser_makeprojectpage') }}">cette page</a>.<br/>
+			<br/>
+			<b><i>Mais j'en viens???</i></b><br/>
+			Ne vous inquiétez pas, je vais vous dire quoi mettre où.
+		</p>
+		<dl id="makeproj_coming">
+			<div class="def">
+				<dt id="makeproj_projname">Nom du projet</dt>
+				<dd>
+					Il s'agit du titre de votre projet.
+					La plupart du temps, il s'agit du titre de votre pièce de théâtre ou de votre évenement.
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="makeproj_projpath">
+					Chemin absolu du dossier contenant les sons:
+				</dt>
+				<dd>
+					Il n'est nécessaire que si vous envisagez de travailler en <a href="#offline">offline</a>, c'est à dire, sans Internet.<br/>
+					Il s'agit du <a href="//lmgtfy.com?q=chemin+absolu">chemin absolu</a> depuis la racine du disque dur jusqu'au dossier contenant vos sons.
+					Ce chemin commence par "X:/" pour les utilisateurs de Windows (où X est la lettre du disque) ou "/" pour les utilisateurs de iOS ou Linux.
+				</dd>
+			</div>
+
+			<div class="def">
+				<dt id="makeproj_song">Les sons</dt>
+				<dd>
+					<dl>
+						<div class="defsub">
+							<dt id="makeproj_songname">Nom</dt>
+							<dd>
+								Il s'agit du titre du son. Souvent il décrit le son lui-même.
+							</dd>
+						</div>
+
+						<div class="defsub">
+							<dt id="makeproj_songdescr">Description</dt>
+							<dd>
+								Il s'agit de la description du son.
+								Souvent elle décrit le moment où le son doit être joué.
+							</dd>
+						</div>
+
+						<div class="defsub">
+							<dt id="makeproj_songvol">Volume initial</dt>
+							<dd>
+								Il s'agit du volume sonore par défaut du son.
+								Le volume peut cependant être modifié avant ou pendant la lecture à l'aide des <a href="#emploi_commands_v">touches V et B</a>.
+							</dd>
+						</div>
+
+						<div class="defsub">
+							<dt id="makeproj_songtype">Type</dt>
+							<dd>
+								Il s'agit du type du son.<br/>
+								<a href="#emploi_type">Allez ici</a> pour une description plus complète des différents types disponibles et de leur emploi.
+							</dd>
+						</div>
+
+						<div class="defsub">
+							<dt id="makeproj_songtransa">Transition 1</dt>
+							<dd>
+								La transition 1 n'est utile qu'avec les types <a href="#emploi_type_restart">Restart</a> et <a href="#emploi_type_repeat">Repeat</a>.<br/>
+								Pour une description plus complète des transitions, <a href="#emploi_trans">c'est par ici</a>.
+							</dd>
+						</div>
+
+						<div class="defsub">
+							<dt id="makeproj_songana">Autonext 1</dt>
+							<dd>
+								L'autonext 1 n'est pas utile avec une <a href="#makeproj_songtransb">transition 2</a> réglée à <a href="#emploi_trans_full">Full</a> car il n'est déclenché que lors de l'arret pendant la lecture du son, impossible avec <a href="#emploi_trans_full">Full</a>.<br/>
+								<a href="#emploi_trans_autonext">Pour en savoir plus sur l'Autonext</a>
+							</dd>
+						</div>
+
+						<div class="defsub">
+							<dt id="makeproj_songtransb">Transition 2</dt>
+							<dd>
+								La transition 2 est la transition employée lorsque la transition 1 n'est pas définie pour les types <a href="#emploi_type_restart">Restart</a> et <a href="#emploi_type_repeat">Repeat</a> ou lorsque le type est <a href="#emploi_type_one">One</a> ou <a href="#emploi_type_random">Random</a>.<br/>
+								<a href="#emploi_trans">Pour en savoir plus sur les transitions</a>
+							</dd>
+						</div>
+
+						<div class="defsub">
+							<dt id="makeproj_songanb">Autonext 2</dt>
+							<dd>
+								<a href="#emploi_trans_autonext">Allez ici</a> pour l'emploi de l'autonext.
+							</dd>
+						</div>
+
+						<div class="defsub">
+							<dt id="makeproj_songpath">Nom du fichier</dt>
+							<dd>
+								Il s'agit du nom du fichier son.<br/>
+								Celui-ci est composé du nom du fichier (ex: "laser") suivi de son extension (".mp3" ou ".ogg").
+							</dd>
+						</div>
+					</dl>
+				</dd>
+			</div>
+		</dl>
+	</div>
+	<div id="offline">
+		<h3>Vous pouvez même m'employer sans connexion à Internet</h3>
+		<p>
+			Il existe une version offline de SoundOrganiser. Elle est <a href="{{ path('xif_soundorganiser_downloadpage') }}">téléchargeable ici</a>.<br/>
+			Les différences entre les versions online et offline sont très légères:
+		</p>
+		<ul>
+			<li>
+				Sur la page d'accueil, il n'est pas nécessaire d'envoyer les sons.
+				Il est cependant obligatoire de renseigner le champ <a href="#makeproj_projpath">"Chemin absolu du dossier contenant les sons"</a> sur la <a href="{{ path('xif_soundorganiser_makeprojectpage') }}">page de création de projet</a>.
+			</li>
+			<li>
+				Une nouvelle commande clavier apparaît: <a href="#emploi_commands_a">La touche A</a><br/>
+				Elle permet de fermer le projet et de retourner à la page d'accueil.
+			</li>
+		</ul>
+	</div>
+	<div>
+		<h3>Qui m'a créé?</h3>
+		<p>
+			SoundOrganiser a été créé initialement par <a href="mailto:xcodexif@xif.fr">Félix Faisant</a> et a été repris par <a href="mailto:nils@nils.shost.ca">Nils Van Zuijlen</a>.
+		</p>
+	</div>
+</article>
+{% endblock %}

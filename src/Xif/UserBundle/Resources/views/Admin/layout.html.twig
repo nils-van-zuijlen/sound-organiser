@@ -1,0 +1,25 @@
+{# src/Xif/UserBundle/Resources/views/Admin/layout.html.twig #}
+
+{# On étend notre layout #}
+{% extends "XifCoreBundle::layout.html.twig" %}
+
+{% block title %}Administration – {{ parent() }}{% endblock %}
+
+{% block body %}
+	<aside>
+		<div class="a-list">
+			<a href="{{ path('xif_user_viewusers') }}">Voir les utilisateurs</a>
+			<a href="{{ path('xif_user_viewfiles') }}">Voir les fichiers</a>
+			<a href="{{ path('xif_core_explorepage', {'admin': 'true'}) }}">Voir les projets</a>
+			<a href="{{ path('xif_core_newactu') }}">Publier une actualité</a>
+			{% if is_granted('ROLE_SUPER_ADMIN') %}
+				<a href="{{ asset('app_dev.php') }}">Controleur frontal de développement</a>
+			{% endif %}
+		</div>
+	</aside>
+	<article class="asideNext">
+		<h2>Administration</h2>
+		{% block admin_content %}
+		{% endblock admin_content %}
+	</article>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "XifUserBundle::layout.html.twig" %}
+
+{% block fos_user_content %}
+	<h2>Mon compte</h2>
+	<div class="buttons-list">
+		<a href="{{ path('fos_user_profile_edit') }}">Éditer</a>
+		<a href="{{ path('fos_user_change_password') }}">Changer de mot de passe</a>
+	</div>
+	{% include "FOSUserBundle:Profile:show_content.html.twig" %}
+{% endblock fos_user_content %}

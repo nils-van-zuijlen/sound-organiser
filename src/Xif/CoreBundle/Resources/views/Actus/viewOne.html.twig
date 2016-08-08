@@ -1,0 +1,29 @@
+{# src/Xif/UserBundle/Ressources/views/Admin/userList.html.twig #}
+
+{% extends 'XifCoreBundle:Actus:layout.html.twig' %}
+
+{% block title %}{{ actu.titre }} – {{ parent() }}{% endblock %}
+
+{% block actus_content %}
+	<h3>{{ actu.titre }}</h3>
+	{{ actu.contenu|raw }}
+	<hr>
+	<p>
+		Écrit par {{ actu.auteur.username }} le {{ actu.datePublication|date('d/m/Y à H:i') }}.
+	</p>
+	<div>
+		<ul class="pagination">
+			{% if actu.id > 1 %}
+				<li><a href="{{ path('xif_core_viewactu', {'id': 1}) }}">Premier</a></li>
+				<li><a href="{{ path('xif_core_viewactu', {'id': (actu.id - 1) }) }}">Précédent</a></li>
+			{% endif %}
+			{% if actu.id < number %}
+				<li><a href="{{ path('xif_core_viewactu', {'id': (actu.id + 1) }) }}">Suivant</a></li>
+				<li><a href="{{ path('xif_core_viewactu', {'id': number}) }}">Dernier</a></li>
+			{% endif %}
+		</ul>
+		{% if is_granted('ROLE_ADMIN') %}
+			<a href="{{ path('xif_core_editactu', {'id': actu.id}) }}">Modifier</a>
+		{% endif %}
+	</div>
+{% endblock %}

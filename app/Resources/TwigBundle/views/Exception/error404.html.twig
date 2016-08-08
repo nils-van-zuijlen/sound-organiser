@@ -1,0 +1,16 @@
+{# app/Resources/TwigBundle/views/Exceptions/error404.html.twig #}
+
+{% extends "XifCoreBundle::layout.html.twig" %}
+
+{% block title %}
+	Erreur 404 – {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<article>
+		<h2>Erreur 404: Fichier introuvable</h2>
+		<p>
+			Ce fichier n'existe pas.
+		</p>
+	</article>
+{% endblock %}

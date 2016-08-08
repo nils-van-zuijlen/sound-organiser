@@ -1,0 +1,180 @@
+@font-face {
+	font-family: Champagne;
+	src: url('../xifcore/fonts/champagne-bold-webfont.eot');
+	src: url('../xifcore/fonts/champagne-bold-webfont.eot?#iefix') format('embedded-opentype'),
+		 url('../xifcore/fonts/champagne-bold-webfont.woff2') format('woff2'),
+		 url('../xifcore/fonts/champagne-bold-webfont.woff') format('woff'),
+		 url('../xifcore/fonts/champagne-bold-webfont.ttf') format('truetype'),
+		 url('../xifcore/fonts/champagne-bold-webfont.svg#champagne__limousinesbold') format('svg');
+	font-weight: bold;
+	font-style: normal;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+	background-color: #000;
+	color: #FFF;
+	font-family: Champagne, Arial, sans-serif;
+}
+
+section {
+	height: 100%;
+	width: 100%;
+	display: flex;
+}
+
+section > div {
+	vertical-align: middle;
+	height: 100%;
+}
+
+#h1 {
+	position: absolute;
+	top: 10px;
+	right: 30px;
+	margin: 20px;
+	font-size: 2.5em;
+}
+
+h1 {
+	margin: 20px;
+	font-size: 2.5em;
+}
+
+h2 {
+	margin-top: 20px;
+}
+
+hr {
+	margin: 80px 50px 20px 50px;
+	width: 85%;
+}
+
+#opened {
+	height: 100%;
+}
+
+#div_sons {
+	width: 40%;
+	border-right: 2px solid white;
+}
+
+#sound_list {
+	text-align: left;
+}
+
+#div_lecture {
+	height: 100%;
+	width: 60%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#lecteur {
+	width: 100%;
+}
+
+#player {
+	width: 85%;
+	margin-top: 25%;
+	height: 28px;
+}
+
+#next_info {
+	font-size: 0.6em;
+	width: 100%;
+}
+
+#next_info h2 {
+	font-size: 3em;
+}
+
+.hide {
+	display: none;
+}
+
+.song_title {
+	font-size: 2em;
+	color: #FFC;
+}
+
+.song_descr {
+	font-size: 1.8em;
+	font-style: italic;
+	text-decoration: underline;
+}
+
+.song_trans {
+	font-size: 1.7em;
+}
+
+song {
+	font-weight: bold;
+	text-decoration: underline;
+	cursor: pointer;
+	color: #FFC;
+}
+
+descr {
+	margin-left: 10px;
+	color: #EEF;
+	font-size: 10px;
+	font-style: italic;
+}
+
+songtype, trans { font-size: 0.8em; }
+
+songtype[one] { color: blue; }
+songtype[rest] { color: green; }
+songtype[rand] { color: red; }
+songtype[rep] { color: purple; }
+songtype[err] {
+	background-color: white;
+	color: black;
+	text-decoration: blink;
+	
+}
+
+trans[long] { color: blue; }
+trans[sweet] { color: teal; }
+trans[quick] { color: aqua; }
+trans[next] { color: fuchsia; }
+trans[full] { color: red; }
+trans[raw] { color: maroon; }
+trans[err] {
+	background-color: white;
+	color: black;
+	text-decoration: blink;
+}
+
+#closed {
+	position: relative;
+	top: 40%;
+}
+
+noscript {
+	background-color: #FF8800;
+	color: black;
+	font-size: xx-large;
+	padding: 5px;
+	width: 100%;
+	display: block;
+}
+
+a {
+	color: #FFC;
+}
+
+#quit {
+	position: absolute;
+	bottom: 5px;
+	left: 5px;
+}

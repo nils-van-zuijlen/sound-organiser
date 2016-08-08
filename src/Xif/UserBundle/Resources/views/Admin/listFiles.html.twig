@@ -1,0 +1,40 @@
+{# src/Xif/UserBundle/Ressources/views/Admin/index.html.twig #}
+
+{% extends 'XifUserBundle:Admin:layout.html.twig' %}
+
+{% block title %}Liste des fichiers – {{ parent() }}{% endblock %}
+
+{% block admin_content %}
+	<h3>Fichiers hébergés</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>Fichier</th>
+				<th>Propriétaire</th>
+				<th>Type Mime</th>
+				<th>Id</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for file in files %}
+				<tr>
+					<td><a href="{{ path('xif_file_get', {'id': file.id, 'admin': 'true'}) }}">{{ file.originalName }}</a></td>
+					<td>{{ file.owner.username }}</td>
+					<td>{{ file.mimeType }}</td>
+					<td>{{ file.id }}</td>
+					<td>
+						<a href="{{ path('xif_user_mailuser', {'id': file.owner.id}) }}">Avertir</a><br>
+						{% if is_granted('ROLE_SUPER_ADMIN') %}
+							<a href="{{ path('xif_file_remove', {'id': file.id, 'admin': 'true'}) }}">Supprimer</a><br>
+						{% endif %}
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="5">Pas de fichiers enregistrés en BDD</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}

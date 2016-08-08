@@ -1,0 +1,60 @@
+{% extends "XifCoreBundle::layout.html.twig" %}
+
+{% block title %}
+	{{ project.title }} – Edit – {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<aside class="articleNext">
+		<h3>Sons</h3>
+		<ol id="songList">
+			{% for song in project.songLines %}
+				<li>
+					<song>{{ song.name }}</song>
+					<descr>{{ song.description }}</descr>
+					<span></span>
+				</li>
+			{% endfor %}
+		</ol>
+	</aside>
+	<article class="asideNext">
+		<h2 id="projTitle">{{ project.title }}</h2>
+		<h4 id="projDescr" {% if project.description is empty %}class="no-descr">Pas de description{% else %}>{{ project.description }}{% endif %}</h4>
+		<div class="buttons-list">
+			<a href="{{ path('xif_soundorganiser_playpage', {'id': project.id}) }}">Lire</a>
+			<input type="button" onclick="addSong();" value="Ajouter un son">
+			<input type="button" onclick="removeThisSong();" value="Retirer ce son">
+		</div>
+		<div id="songForm">
+			<p id="songName">{{ project.songLines[0].name }}</p>
+			<p id="songDescr" {% if project.songLines[0].description is empty %}class="no-descr">Pas de description{% else %}>{{ project.songLines[0].description }}{% endif %}</p>
+			<input type="button" id="chooseFile" value="Choisir un fichier">
+			<label for="chooseFile" id="choosedFile"></label><br>
+			<input type="button" id="chooseTrans" value="Choisir la transition">
+			<label for="chooseTrans" id="choosedTrans"></label><br>
+			<label for="songVol">Volume (entre 0 et 1)</label>
+			<span id="songVol">{{ project.songLines[0].vol }}</span>
+		</div>
+	</article>
+	<div id="popUp" style="display: none;">
+		<img src="{{ asset('bundles/xifsoundorganiser/croix.png') }}" alt="fermer" tabindex="0" id="fermerAffichage" />
+		<div id="popUpButtons"></div>
+		<div id="popUpModif"></div>
+		<input type="button" onclick="endEdit();" id="validerPopUp" value="Valider">
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{{ asset('bundles/xifsoundorganiser/edit.js') }}"></script>
+	{{ parent() }}
+	<script>
+		PROJECT = {{ project.json|raw }};
+		baseURL = "{{ baseGetFileURL|raw }}";
+		open_proj();
+	</script>
+{% endblock %}
+
+{% block styles %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('bundles/xifsoundorganiser/edit.css') }}">
+{% endblock %}
