@@ -6,93 +6,89 @@
 	<meta charset="UTF-8">
 	<title>{% block title %}SoundOrganiser{% endblock %}</title>
 	{% block styles %}
-		<link rel="stylesheet" href="{{ asset('bundles/xifcore/style.css') }}" />
+		<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.css') }}" />
+		<link rel="stylesheet" href="{{ asset('bundles/core/css/layout.css') }}" />
 	{% endblock %}
 	<link rel="icon" type="image/svg" href="{{ asset('bundles/xifcore/icon.svg') }}" />
 	<link rel="icon" href="{{ asset('bundles/xifcore/icon.png') }}" type="image/png" />
 </head>
 <body>
-	<div id="wrap">
-		{% if app.session.flashbag.get('info') is not empty %}
-			<div id="flash_messages">
-				{% for item in app.session.flashbag.get('info') %}
-					<p>{{ item }}</p>
-				{% endfor %}
-			</div>
-		{% endif %}
-		
-		<header>
-			<h1>
+	<div class="navbar navbar-inverse navbar-static-top">
+		<div class="container">
+			<div class="navbar-header">
 				<a href="{{ path('xif_core_homepage') }}" style="color: black;">
 					<img src="{{ asset('bundles/xifcore/icon.svg') }}">
 					SoundOrganiser
 				</a>
-			</h1>
-			<nav>
+			</div>
+
+			<ul class="nav navbar-nav">
 				{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-					<a href="{{ path('fos_user_profile_show')}}">
+					<li><a href="{{ path('fos_user_profile_show')}}">
 						Mon compte
-					</a>
-					<a href="{{ path('fos_user_security_logout') }}">
+					</a></li>
+					<li><a href="{{ path('fos_user_security_logout') }}">
 						Se déconnecter
-					</a>
+					</a></li>
 					{% if is_granted('ROLE_ADMIN') %}
-						<a href="{{ path('xif_user_homepage') }}">
+						<li><a href="{{ path('xif_user_homepage') }}">
 							Administration
-						</a>
+						</a></li>
 					{% endif %}
 				{% else %}
-					<a href="{{ path('fos_user_security_login') }}">
+					<li><a href="{{ path('fos_user_security_login') }}">
 						Se connecter
-					</a>
-					<a href="{{ path('fos_user_registration_register') }}">
+					</a></li>
+					<li><a href="{{ path('fos_user_registration_register') }}">
 						Créer un compte
-					</a>
+					</a></li>
 				{% endif %}
-			</nav>
-			<noscript>
-				Veuillez activer le JavaScript (ou scripts ActiveX) afin de profiter des fonctionnalités de ces pages
-			</noscript>
-		</header>
-
-		<section>{% block body %}{% endblock %}</section>
-		
-		<div id="push"></div>
+			</ul>
+		</div>
 	</div>
 
-	<footer>
-		<p>
-			※
-			<a href="{{ path('xif_core_creditspage') }}">Crédits</a>
-			※
-			<a href="{{ path('xif_core_conditionspage') }}">Conditions d'utilisation</a>
-			※
-			<a href="{{ path('xif_core_contact') }}">Contact</a>
-			※
-		</p>
-		<hr />
-		<p>
-			©2016 and after, Nils VAN ZUIJLEN
-		</p>
+	<div class="container">
+		{# messages flashs #}
+		{% for key, messages in app.session.flashbag.all() %}
+			{% for message in messages %}
+				<div class="alert alert-{{ key }}">
+					{{ message|trans({}, 'FOSUserBundle') }}
+				</div>
+			{% endfor %}
+		{% endfor %}
+
+		<noscript class="alert alert-danger">
+			Veuillez activer le JavaScript (ou scripts ActiveX) afin de profiter des fonctionnalités de ces pages
+		</noscript>
+
+		{% block body %}{% endblock %}
+	</div>
+
+	<footer class="footer">
+		<div class="container">
+			<p>
+				※
+				<a href="{{ path('xif_core_creditspage') }}">Crédits</a>
+				※
+				<a href="{{ path('xif_core_conditionspage') }}">Conditions d'utilisation</a>
+				※
+				<a href="{{ path('xif_core_contact') }}">Contact</a>
+				※
+			</p>
+			<hr />
+			<p>
+				©2016 and after, Nils VAN ZUIJLEN
+			</p>
+		</div>
 	</footer>
 
 	{% block scripts %}
-		<script>
-			(function() {
-				var messagesFlashs = document.getElementById('flash_messages');
-				if (messagesFlashs) {
-					messagesFlashs.addEventListener('click', function() {
-						messagesFlashs.style = 'display: none;';
-					});
-					if (!messagesFlashs.firstElementChild) {
-						messagesFlashs.style = 'display: none;';
-					}
-					setTimeout(function() {
-						messagesFlashs.style = 'display: none;';
-					}, 5000);
-				}
-			})();
-		</script>
+		<script type="text/javascript" src="{{ asset('bootstrap/jquery-3.1.0.min.js') }}"></script>
+		<script type="text/javascript" src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
 	{% endblock %}
 </body>
 </html>

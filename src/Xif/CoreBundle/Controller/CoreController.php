@@ -13,7 +13,8 @@ use Xif\CoreBundle\Form\ContactType;
  * Font la liaison entre les bundles
  */
 class CoreController extends Controller {
-	
+	const NB_ACTUS_IN_INDEX = 5;
+
 	/**
 	 * Page d'accueil
 	 * 
@@ -21,7 +22,7 @@ class CoreController extends Controller {
 	 */
 	public function indexAction() {
 		$entityManager = $this->getDoctrine()->getManager();
-		$actus = $entityManager->getRepository('XifCoreBundle:Actus')->getLasts(5);
+		$actus = $entityManager->getRepository('XifCoreBundle:Actus')->getLasts(self::NB_ACTUS_IN_CAROUSEL);
 
 		return $this->render(
 			'XifCoreBundle:Core:index.html.twig',

@@ -1,21 +1,7 @@
 {# src/Xif/CoreBundle/Resources/views/Actus/form.html.twig #}
-
-{{ form_start(form) }}
-	{{ form_errors(form) }}
-	<div class="form-group">
-		{{ form_label(form.titre, 'Titre') }}
-		{{ form_errors(form.titre) }}
-		{{ form_widget(form.titre) }}
-	</div>
-	<div class="form-group">
-		{{ form_label(form.contenu, 'Contenu') }}
-		<i>En HTML</i>
-		{{ form_errors(form.contenu) }}
-		{{ form_widget(form.contenu) }}
-	</div>
-	{{ form_widget(form.submit) }}
-	{{ form_rest(form) }}
-{{ form_end(form) }}
+<div class="well">
+	{{ form(form) }}
+</div>
 
 <p>
 	<em>

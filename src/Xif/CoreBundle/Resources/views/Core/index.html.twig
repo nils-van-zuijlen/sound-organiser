@@ -3,28 +3,30 @@
 {% extends "XifCoreBundle::layout.html.twig" %}
 
 {% block body %}
-	<aside class="a-list">
-		{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-			<a href="{{ path('xif_soundorganiser_homepage') }}">
-				Mes projets
+<div class="row">
+	<aside class="col-lg-3">
+		<ul class="list-group">
+			{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+				<a href="{{ path('xif_soundorganiser_homepage') }}" class="list-group-item">
+					Mes projets
+				</a>
+				<a href="{{ path('xif_soundorganiser_makeprojectpage') }}" class="list-group-item">
+					Nouveau projet
+				</a>
+				<a href="{{ path('xif_soundorganiser_downloadpage') }}" class="list-group-item">
+					Télécharger la version offline
+				</a>
+			{% endif %}
+			{#<a href="{{ path('xif_core_explorepage') }}" class="list-group-item">
+				Explorer les projets publics
+			</a>#}
+			<a href="{{ path('xif_core_help') }}" class="list-group-item">
+				Aide
 			</a>
-			<a href="{{ path('xif_soundorganiser_makeprojectpage') }}">
-				Nouveau projet
-			</a>
-			<a href="{{ path('xif_soundorganiser_downloadpage') }}">
-				Télécharger la version offline
-			</a>
-		{% endif %}
-		{#<a href="{{ path('xif_core_explorepage') }}">
-			Explorer les projets publics
-		</a>#}
-		<a href="{{ path('xif_core_help') }}">
-			Aide
-		</a>
+		</ul>
 	</aside>
-	<article>
-		<article class="asideNext">
-			<h2 style="margin-top: 0;">Accueil</h2>
+	<section class="col-lg-9">
+		<article>
 			<p>
 				SoundOrganiser est une solution gratuite pour la diffusion de musique lors d'évenements.
 			</p>
@@ -40,16 +42,36 @@
 				<li>Contrôle intégral au clavier</li>
 			</ul>
 		</article>
-		{% for actu in actus %}
-			<article class="asideNext mt">
-				<h3><a href="{{ path('xif_core_viewactu', {'id': actu.id}) }}">{{ actu.titre }}</a></h3>
-				{{ actu.contenu|raw }}
-				<hr>
-				<p>
-					Écrit par {{ actu.auteur.username }} le {{ actu.datePublication|date('d/m/Y à H:i') }}.
-				</p>
-			</article>
-		{% endfor %}
-		<p><a href="{{ path('xif_core_viewactu', {'id': 1}) }}">Toutes les actus</a></p>
-	</article>
+		
+		<div id="actus" class="panel-group">
+			<h3>
+				Actualités
+			</h3>
+
+			{% for actu in actus %}
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">
+							<a class="accordion-toggle" href="#actu{{ actu.id }}" data-parent="#actus" data-toggle="collapse">
+								{{ actu.titre }}
+							</a>
+						</h3>
+					</div>
+					<div id="actu{{ actu.id }}" class="panel-collapse collapse{% if loop.first %} in{% endif %}">
+						<div class="panel-body">
+							{{ actu.contenu|raw }}
+							<hr>
+							<p>
+								Écrit par {{ actu.auteur.username }}
+								le {{ actu.datePublication|date('d/m/Y à H:i') }}.
+							</p>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+
+		<p><a href="{{ path('xif_core_viewactu', {'id': 1}) }}" class="btn btn-default">Toutes les actus</a></p>
+	</section>
+</div>
 {% endblock %}

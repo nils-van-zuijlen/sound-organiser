@@ -3,8 +3,8 @@
 {% extends "XifCoreBundle::layout.html.twig" %}
 
 {% block body %}
-<article>
-	<div class="projects-preview">
+<div class="row">
+	<div class="col-sm-3 col-xs-3 col-md-2 col-lg-2">
 		{% for project in projects %}
 			<div class="project-preview">
 				<h4>{{ project.title }}</h4>
@@ -15,17 +15,21 @@
 			<p>Il n'y a pas encore de projets publics.</p>
 		{% endfor %}
 	</div>
-	{% if nbPages != 0 %}
-		<ul class="pagination">
-			{# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
-			{% for p in range(1, nbPages) %}
-				<li {% if p == page %} class="active"{% endif %}>
-					<a href="{{ path('xif_core_explorepage', {'page': p, 'admin': admin}) }}">
-						{{ p }}
-					</a>
-				</li>
-			{% endfor %}
-		</ul>
-	{% endif %}
-</article>
+</div>
+<div class="row">
+	<div class="col-xs-12">
+		{% if nbPages != 0 %}
+			<ul class="pagination">
+				{# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
+				{% for p in range(1, nbPages) %}
+					<li {% if p == page %} class="active"{% endif %}>
+						<a href="{{ path('xif_core_explorepage', {'page': p, 'admin': admin}) }}">
+							{{ p }}
+						</a>
+					</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	</div>
+</div>
 {% endblock %}
