@@ -49,7 +49,7 @@
 	{{ parent() }}
 	<script>
 		PROJECT = {{ project.json|raw }};
-		baseURL = "{{ baseGetFileURL|raw }}";
+		baseURL = "{{ path('xif_file_get_base') }}";
 		open_proj();
 	</script>
 {% endblock %}

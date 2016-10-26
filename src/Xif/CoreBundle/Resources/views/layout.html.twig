@@ -19,22 +19,6 @@
 					<p>{{ item }}</p>
 				{% endfor %}
 			</div>
-			<script>
-				(function() {
-					var messagesFlashs = document.getElementById('flash_messages');
-					if (messagesFlashs) {
-						messagesFlashs.addEventListener('click', function() {
-							messagesFlashs.style = 'display: none;';
-						});
-						if (!messagesFlashs.firstElementChild) {
-							messagesFlashs.style = 'display: none;';
-						}
-						setTimeout(function() {
-							messagesFlashs.style = 'display: none;';
-						}, 5000);
-					}
-				})();
-			</script>
 		{% endif %}
 		
 		<header>
@@ -92,6 +76,23 @@
 		</p>
 	</footer>
 
-	{% block scripts %}{% endblock %}
+	{% block scripts %}
+		<script>
+			(function() {
+				var messagesFlashs = document.getElementById('flash_messages');
+				if (messagesFlashs) {
+					messagesFlashs.addEventListener('click', function() {
+						messagesFlashs.style = 'display: none;';
+					});
+					if (!messagesFlashs.firstElementChild) {
+						messagesFlashs.style = 'display: none;';
+					}
+					setTimeout(function() {
+						messagesFlashs.style = 'display: none;';
+					}, 5000);
+				}
+			})();
+		</script>
+	{% endblock %}
 </body>
 </html>

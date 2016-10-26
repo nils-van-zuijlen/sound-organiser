@@ -28,3 +28,9 @@ xif_file_getmine:
     defaults:
         _controller: XifFileBundle:File:getMine
     methods: GET
+
+xif_file_get_base:
+    path: /get/
+    defaults:
+        _controller: XifFileBundle:File:getMine
+    methods: FLOP

@@ -38,9 +38,6 @@ class CoreController extends Controller {
 	 * @return Response
 	 */
 	public function exploreAction($page, $admin) {
-		/*
-		   $projects = array(array('title' => 'Titre du projet 1','descr' => 'Une description (normalement plus longue que le titre)'),array('title' => 'Titre du projet 2','descr' => 'Deux descriptions (normalement plus longues que le titre)'),array('title' => 'Titre du projet 3','descr' => 'Trois descriptions (normalement plus longues que le titre)'));
-		 */
 		// évite les visites non-souhaitées
 		if (!$admin && !$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
 			throw $this->createNotFoundException('Fonction en cours d\'implémentation');
@@ -57,7 +54,7 @@ class CoreController extends Controller {
 		if ($admin && $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
 			$projects = $entityManager
 				->getRepository('XifSoundOrganiserBundle:Project')
-				->getAllProjects($page, $nbPerPage);
+				->getPaginedProjects($page, $nbPerPage);
 		} else {
 			$projects = null;
 		}
@@ -72,9 +69,9 @@ class CoreController extends Controller {
 			'XifCoreBundle:Core:explore.html.twig',
 			array(
 				'projects' => $projects,
-				'page' => $page,
-				'nbPages' => $nbPages,
-				'admin' => $admin
+				'page'     => $page,
+				'nbPages'  => $nbPages,
+				'admin'    => $admin
 				)
 			);
 	}

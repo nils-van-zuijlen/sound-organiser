@@ -298,7 +298,7 @@ class SongLine
 			$this->description .
 			'", "id": ' .
 			$this->id .
-			' }';
+			' },';
 		return $return;
 	}
 }

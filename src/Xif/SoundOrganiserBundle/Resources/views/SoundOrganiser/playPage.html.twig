@@ -74,7 +74,7 @@
 	<script src="{{ asset('bundles/xifsoundorganiser/playPage.js')}}"></script>
 	<script>
 		PROJECT = {{ project.json|raw }};
-		baseURL = "{{ baseGetFileURL|raw }}";
+		baseURL = "{{ path('xif_file_get_base')|raw }}";
 		open_proj();
 	</script>
 </body>

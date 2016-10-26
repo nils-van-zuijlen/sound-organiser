@@ -1,0 +1,8 @@
+# src/Xif/CoreBundle/Resources/config/routing/all.yml
+
+xif_core:
+    resource: core.yml
+
+xif_actus:
+    resource: actus.yml
+    prefix: /actu

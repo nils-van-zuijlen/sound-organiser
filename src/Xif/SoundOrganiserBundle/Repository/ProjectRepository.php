@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityRepository;
  * repository methods below.
  */
 class ProjectRepository extends EntityRepository {
-	public function getAllProjects($page, $nbPerPage)
+	public function getPaginedProjects($page, $nbPerPage)
 	{
 		$queryBuilder = $this->createQueryBuilder('p');
 

@@ -71,7 +71,7 @@ class ActusController extends Controller
 
 		$actu = new Actus();
 
-		$actu->setAuteur($this->get('security.token_storage')->getToken()->getUser());
+		$actu->setAuteur($this->getUser());
 
 		$form = $this->createForm(ActusType::class, $actu);
 

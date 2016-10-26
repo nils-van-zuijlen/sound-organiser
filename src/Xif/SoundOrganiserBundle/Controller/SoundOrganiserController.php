@@ -56,8 +56,6 @@ class SoundOrganiserController extends Controller {
 		}
 
 		if (!$this
-				->get('security.token_storage')
-				->getToken()
 				->getUser()
 				->getId()
 				== $project
@@ -95,10 +93,7 @@ class SoundOrganiserController extends Controller {
 			->setTitle('Le titre du projet')
 			->setDescription('La description du projet')
 			->setOwner(
-				$this
-					->get('security.token_storage')
-					->getToken()
-					->getUser()
+				$this->getUser()
 				)
 			->addSongLine($songLine);
 
@@ -124,15 +119,7 @@ class SoundOrganiserController extends Controller {
 			throw new NotFoundHttpException('Projet inexistant.');
 		}
 
-		if (!$this
-				->get('security.token_storage')
-				->getToken()
-				->getUser()
-				->getId()
-				== $project
-					->getOwner()
-					->getId()
-			) {
+		if (!$this->getUser()->getId()== $project->getOwner()->getId()) {
 			throw new AccessDeniedException('Vous n\'êtes pas le propriétaire du fichier');
 		}
 
@@ -157,14 +144,7 @@ class SoundOrganiserController extends Controller {
 				Response::HTTP_PRECONDITION_FAILED
 				);
 		}
-		if (!$this
-				->get('security.token_storage')
-				->getToken()
-				->getUser()
-				->getId()
-				== $project
-					->getOwner()
-					->getId()
+		if (!$this->get('security.token_storage')->getToken()->getUser()->getId()== $project->getOwner()->getId()
 			) {
 			return new Response(
 				'Vous n\'êtes pas le propriétaire du projet',
@@ -307,15 +287,7 @@ class SoundOrganiserController extends Controller {
 			throw new NotFoundHttpException('Ce projet n\'existe pas');
 		}
 
-		if (!$this
-				->get('security.token_storage')
-				->getToken()
-				->getUser()
-				->getId()
-				== $project
-					->getOwner()
-					->getId()
-			) {
+		if (!$this->getUser()->getId()== $project->getOwner()->getId()) {
 			throw new AccessDeniedHttpException('Vous n\'êtes pas le propriétaire du fichier');
 		}
 

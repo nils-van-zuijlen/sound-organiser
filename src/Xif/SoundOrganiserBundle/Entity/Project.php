@@ -168,27 +168,7 @@ class Project
 			$this->title .
 			'", "path": "", "vol_factor": 0.7, "songs": [';
 		foreach ($this->songLines as $line) {
-			$json .= '{ "name": "' .
-				$line->getName() .
-				'", "file": ';
-				if ($line->getFile() != null) {
-					$json .= $line->getFile()->getId();
-				} else {
-					$json .= 'false';
-				}
-			$json .= ', "vol": ' .
-				$line->getVol() .
-				', "trans": ["' .
-				$line->getType() .
-				'", "' .
-				$line->getTrans1() .
-				'", "' .
-				$line->getTrans2() .
-				'"], "descr": "' .
-				$line->getDescription() .
-				'", "id": ' .
-				$line->getId() .
-				' },';
+			$json .= $line->getJson();
 		}
 		$json .= '] }';
 
