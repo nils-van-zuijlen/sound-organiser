@@ -1,6 +1,12 @@
 {% extends "XifUserBundle::layout.html.twig" %}
 
 {% block fos_user_content %}
-	<h2>Réinitialiser le mot de passe</h2>
-	{% include "XifUserBundle:Resetting:reset_content.html.twig" %}
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2">
+			<h2>Réinitialiser mon mot de passe</h2>
+			<div class="well">
+				{% include "XifUserBundle:Resetting:reset_content.html.twig" %}
+			</div>
+		</div>
+	</div>
 {% endblock fos_user_content %}

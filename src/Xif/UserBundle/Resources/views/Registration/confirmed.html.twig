@@ -3,11 +3,15 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% block fos_user_content %}
-	<p>
-		{{ 'registration.confirmed'|trans({'%username%': user.username}) }}
-		Vous pouvez maintenant <a href="{{ path('xif_soundorganiser_makeprojectpage') }}">créer vos projets</a>.
-	</p>
-	{% if targetUrl %}
-	<p><a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a></p>
-	{% endif %}
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2">
+			<p>
+				{{ 'registration.confirmed'|trans({'%username%': user.username}) }}
+				Vous pouvez maintenant <a href="{{ path('xif_soundorganiser_makeprojectpage') }}">créer vos projets</a>.
+			</p>
+			{% if targetUrl %}
+				<p><a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a></p>
+			{% endif %}
+		</div>
+	</div>
 {% endblock fos_user_content %}

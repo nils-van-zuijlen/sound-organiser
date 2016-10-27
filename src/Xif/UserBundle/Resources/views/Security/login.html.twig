@@ -4,7 +4,9 @@
 
 {% block fos_user_content %}
 
-<form action="{{ path("fos_user_security_check") }}" method="post">
+<form action="{{ path("fos_user_security_check") }}" method="post" class="form-signin">
+	
+	<h2 class="form-signin-heading">Veuillez vous identifier</h2>
 
 	{% if error %}
 		<div class="form-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -12,24 +14,75 @@
 
 	<input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
 
-	<div class="form-group">
-		<label for="username">{{ 'security.login.username'|trans }}</label>
-		<input type="text" id="username" name="_username" value="{{ last_username }}" required="required" />
-	</div>
+	<label for="username" class="sr-only">{{ 'security.login.username'|trans }}</label>
+	<input type="text" id="username" name="_username" value="{{ last_username }}" placeholder="{{ 'security.login.username'|trans }}" required class="form-control" />
 	
-	<div class="form-group">
-		<label for="password">{{ 'security.login.password'|trans }}</label>
-		<input type="password" id="password" name="_password" required="required" />
-	</div>
-	
-	<div class="form-group-checkbox">
-		<input type="checkbox" id="remember_me" name="_remember_me" value="on" />
-		<label for="remember_me">{{ 'security.login.remember_me'|trans }}</label>
+	<label for="password" class="sr-only">{{ 'security.login.password'|trans }}</label>
+	<input type="password" id="password" name="_password" required class="form-control" placeholder="{{ 'security.login.password'|trans }}" />
+
+	<div class="checkbox">
+		<label for="remember_me">
+			<input type="checkbox" id="remember_me" name="_remember_me" checked value="on" />
+			{{ 'security.login.remember_me'|trans }}
+		</label>
 	</div>
 
+	<input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" class="btn btn-lg btn-primary btn-block" />
+	
 	<div>
-		<input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" />
 		<a href="{{ path('fos_user_resetting_request') }}">J'ai oublié mon mot de passe</a>
 	</div>
 </form>
 {% endblock fos_user_content %}
+
+{% block scripts %}
+	{{ parent() }}
+	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+	<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+{% endblock %}
+
+{% block styles %}
+	{{ parent() }}
+	<style type="text/css">
+		body {
+			padding-top: 40px;
+			padding-bottom: 40px;
+			background-color: #eee;
+		}
+
+		.form-signin {
+			max-width: 330px;
+			padding: 15px;
+			margin: 0 auto;
+		}
+		.form-signin .form-signin-heading,
+		.form-signin .checkbox {
+			margin-bottom: 10px;
+		}
+		.form-signin .checkbox {
+			font-weight: normal;
+		}
+		.form-signin .form-control {
+			position: relative;
+			height: auto;
+			-webkit-box-sizing: border-box;
+				 -moz-box-sizing: border-box;
+							box-sizing: border-box;
+			padding: 10px;
+			font-size: 16px;
+		}
+		.form-signin .form-control:focus {
+			z-index: 2;
+		}
+		#username {
+			margin-bottom: -1px;
+			border-bottom-right-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+		#password {
+			margin-bottom: 10px;
+			border-top-left-radius: 0;
+			border-top-right-radius: 0;
+		}
+	</style>
+{% endblock %}

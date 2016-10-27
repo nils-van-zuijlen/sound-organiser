@@ -36,7 +36,12 @@ class PromoteType extends AbstractType {
 				)
 			->add(
 				'save',
-				SubmitType::class
+				SubmitType::class,
+				array(
+					'attr' => array(
+						'class' => 'btn btn-primary'
+						),
+					)
 				)
 			;
 	}
