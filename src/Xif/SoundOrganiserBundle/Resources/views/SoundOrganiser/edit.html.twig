@@ -5,48 +5,61 @@
 {% endblock %}
 
 {% block body %}
-	<aside class="articleNext">
-		<h3>Sons</h3>
-		<ol id="songList">
-			{% for song in project.songLines %}
-				<li>
-					<song>{{ song.name }}</song>
-					<descr>{{ song.description }}</descr>
-					<span></span>
-				</li>
-			{% endfor %}
-		</ol>
-	</aside>
-	<article class="asideNext">
-		<h2 id="projTitle">{{ project.title }}</h2>
-		<h4 id="projDescr" {% if project.description is empty %}class="no-descr">Pas de description{% else %}>{{ project.description }}{% endif %}</h4>
-		<div class="buttons-list">
-			<a href="{{ path('xif_soundorganiser_playpage', {'id': project.id}) }}">Lire</a>
-			<input type="button" onclick="addSong();" value="Ajouter un son">
-			<input type="button" onclick="removeThisSong();" value="Retirer ce son">
+	<div class="row">
+		<aside class="col-lg-4">
+			<h3>Sons</h3>
+			<ol id="songList">
+				{% for song in project.songLines %}
+					<li>
+						<song>{{ song.name }}</song>
+						<descr>{{ song.description }}</descr>
+						<span></span>
+					</li>
+				{% endfor %}
+			</ol>
+		</aside>
+		<article class="col-lg-8">
+			<h2 id="projTitle">{{ project.title }}</h2>
+			<h4 id="projDescr"{% if project.description is empty %} class="help-block">Pas de description{% else %}>{{ project.description }}{% endif %}</h4>
+			<div class="btn-group">
+				<a href="{{ path('xif_soundorganiser_playpage', {'id': project.id}) }}" class="btn btn-primary">Lire</a>
+				<input type="button" onclick="addSong();" value="Ajouter un son" class="btn btn-primary">
+				<input type="button" onclick="removeThisSong();" value="Retirer ce son" class="btn btn-danger">
+			</div>
+			<div id="songForm">
+				<p id="songName">{{ project.songLines[0].name }}</p>
+				<p id="songDescr"{% if project.songLines[0].description is empty %} class="help-block">Pas de description{% else %}>{{ project.songLines[0].description }}{% endif %}</p>
+				<input type="button" id="chooseFile" value="Choisir un fichier" class="btn btn-primary">
+				<label for="chooseFile" id="choosedFile"></label><br>
+				<input type="button" id="chooseTrans" value="Choisir la transition" class="btn btn-primary">
+				<label for="chooseTrans" id="choosedTrans"></label><br>
+				<label for="songVol">Volume (entre 0 et 1)</label>
+				<span id="songVol">{{ project.songLines[0].vol }}</span>
+			</div>
+		</article>
+	</div>
+	<div id="popUp" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">x</button>
+					<div id="popUpButtons" class="modal-title"></div>
+				</div>
+				<div id="popUpModif" class="modal-body"></div>
+				<div class="modal-footer">
+					<div class="btn-group">
+						<input type="button" onclick="endEdit();" id="validerPopUp" value="Valider">
+						<input type="button" value="Annuler" data-dismiss="modal">
+					</div>
+				</div>
+			</div>
 		</div>
-		<div id="songForm">
-			<p id="songName">{{ project.songLines[0].name }}</p>
-			<p id="songDescr" {% if project.songLines[0].description is empty %}class="no-descr">Pas de description{% else %}>{{ project.songLines[0].description }}{% endif %}</p>
-			<input type="button" id="chooseFile" value="Choisir un fichier">
-			<label for="chooseFile" id="choosedFile"></label><br>
-			<input type="button" id="chooseTrans" value="Choisir la transition">
-			<label for="chooseTrans" id="choosedTrans"></label><br>
-			<label for="songVol">Volume (entre 0 et 1)</label>
-			<span id="songVol">{{ project.songLines[0].vol }}</span>
-		</div>
-	</article>
-	<div id="popUp" style="display: none;">
-		<img src="{{ asset('bundles/xifsoundorganiser/croix.png') }}" alt="fermer" tabindex="0" id="fermerAffichage" />
-		<div id="popUpButtons"></div>
-		<div id="popUpModif"></div>
-		<input type="button" onclick="endEdit();" id="validerPopUp" value="Valider">
 	</div>
 {% endblock %}
 
 {% block scripts %}
-	<script src="{{ asset('bundles/xifsoundorganiser/edit.js') }}"></script>
 	{{ parent() }}
+	<script src="{{ asset('bundles/xifsoundorganiser/edit.js') }}"></script>
 	<script>
 		PROJECT = {{ project.json|raw }};
 		baseURL = "{{ path('xif_file_get_base') }}";

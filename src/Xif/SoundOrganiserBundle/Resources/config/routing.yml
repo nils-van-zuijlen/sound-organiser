@@ -40,6 +40,8 @@ xif_soundorganiser_editajax:
     path:    /{projId}
     defaults:
         _controller: XifSoundOrganiserBundle:SoundOrganiser:editAjax
+    requirements:
+        projId: \d*
     methods: POST
 
 xif_soundorganiser_delete:

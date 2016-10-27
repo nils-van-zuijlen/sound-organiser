@@ -250,6 +250,7 @@ class SoundOrganiserController extends Controller {
 					return $response;
 				}
 
+				//suppression d'un son
 				if ($POST->has('removeSong')) {
 					if (null === $songLine = $entityManager
 						->getRepository('XifSoundOrganiserBundle:SongLine')

@@ -1,9 +1,5 @@
 /* src/Xif/SoundOrganiserBundle/Resources/public/edit.css */
 
-aside {
-	padding: 1em;
-}
-
 label {
 	display: inline-block;
 	padding: 0.25em;
@@ -14,12 +10,12 @@ song {
 	font-weight: bold;
 	text-decoration: underline;
 	cursor: pointer;
-	color: #FFC;
+	color: #BABA36;
 }
 
 descr {
 	margin-left: 10px;
-	color: #EEF;
+	color: #5E5EBF;
 	font-size: 10px;
 	font-style: italic;
 }
@@ -33,8 +29,6 @@ songtype[rep] { color: purple; }
 songtype[err] {
 	background-color: white;
 	color: black;
-	text-decoration: blink;
-	
 }
 
 trans[long] { color: blue; }
@@ -46,46 +40,8 @@ trans[raw] { color: maroon; }
 trans[err] {
 	background-color: white;
 	color: black;
-	text-decoration: blink;
 }
 
-#popUp {
-	background-color: #CA088E;
-	color: #000000;
-	border-radius: 10px;
-	padding: 1em;
-	padding-top: 4em;
-	padding-bottom: 4em;
-	position: fixed;
-	height: auto;
-	width: auto;
-	top: 1em;
-	right: 1em;
-	bottom: 1em;
-	left: 1em;
-	overflow: auto;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-}
-#fermerAffichage {
-	position: absolute;
-	top: 1.5em;
-	right: 1.5em;
-}
-#validerPopUp {
-	position: absolute;
-	bottom: 1em;
-	left: 1em;
-}
-#popUpModif {
-	height: 100%;
-}
-#popUpButtons {
-	position: absolute;
-	top: 1em;
-	left: 1em;
-}
 iframe {
 	height: 100%;
 	width: 100%;
@@ -95,7 +51,3 @@ iframe {
 /* * {
 	outline: 2px black;
 }*/
-
-.no-descr {
-	color: #737373;
-}
