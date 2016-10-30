@@ -2,14 +2,14 @@
 
 # Nouvelle actu
 xif_core_newactu:
-    path: /actu/new
+    path: /new
     defaults:
         _controller: XifCoreBundle:Actus:new
     methods: GET|POST
 
 # Affichage des actus même si elles ne sont plus sur la page d'accueil
 xif_core_viewactu:
-    path: /actu/{id}
+    path: /{id}
     defaults:
         _controller: XifCoreBundle:Actus:viewOne
     requirements:
@@ -19,7 +19,7 @@ xif_core_viewactu:
 # Édition des actus
 # Tous les administrateurs peuvent les éditer
 xif_core_editactu:
-    path: /actu/{id}/edit
+    path: /{id}/edit
     defaults:
         _controller: XifCoreBundle:Actus:edit
     requirements:

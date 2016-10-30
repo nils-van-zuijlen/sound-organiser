@@ -279,7 +279,7 @@ class SongLine
 	public function getJson()
 	{
 		$return = '{ "name": "' .
-			$this->name .
+			Project::escape($this->name) .
 			'", "file": ';
 		if ($this->file != null) {
 			$return .= $this->file->getId();
@@ -289,13 +289,13 @@ class SongLine
 		$return .= ', "vol": ' .
 			$this->vol .
 			', "trans": ["' .
-			$this->type .
+			Project::escape($this->type) .
 			'", "' .
-			$this->trans1 .
+			Project::escape($this->trans1) .
 			'", "' .
-			$this->trans2 .
+			Project::escape($this->trans2) .
 			'"], "descr": "' .
-			$this->description .
+			Project::escape($this->description) .
 			'", "id": ' .
 			$this->id .
 			' },';

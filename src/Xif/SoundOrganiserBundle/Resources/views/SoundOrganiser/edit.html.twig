@@ -7,16 +7,20 @@
 {% block body %}
 	<div class="row">
 		<aside class="col-lg-4">
-			<h3>Sons</h3>
-			<ol id="songList">
-				{% for song in project.songLines %}
-					<li>
-						<song>{{ song.name }}</song>
-						<descr>{{ song.description }}</descr>
-						<span></span>
-					</li>
-				{% endfor %}
-			</ol>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Sons</h3>
+				</div>
+				<div class="list-group" id="songList">
+					{% for song in project.songLines %}
+						<li class="list-group-item{% if loop.first %} list-group-item-info{% endif %}">
+							<song>{{ song.name }}</song>
+							<descr>{{ song.description }}</descr>
+							<span></span>
+						</li>
+					{% endfor %}
+				</div>
+			</div>
 		</aside>
 		<article class="col-lg-8">
 			<h2 id="projTitle">{{ project.title }}</h2>
@@ -26,20 +30,20 @@
 				<input type="button" onclick="addSong();" value="Ajouter un son" class="btn btn-primary">
 				<input type="button" onclick="removeThisSong();" value="Retirer ce son" class="btn btn-danger">
 			</div>
-			<div id="songForm">
-				<p id="songName">{{ project.songLines[0].name }}</p>
-				<p id="songDescr"{% if project.songLines[0].description is empty %} class="help-block">Pas de description{% else %}>{{ project.songLines[0].description }}{% endif %}</p>
-				<input type="button" id="chooseFile" value="Choisir un fichier" class="btn btn-primary">
+			<form id="songForm" class="well">
+				<h5 id="songName">{{ project.songLines[0].name }}</h5>
+				<h6 id="songDescr"{% if project.songLines[0].description is empty %} class="help-block">Pas de description{% else %}>{{ project.songLines[0].description }}{% endif %}</h6>
+				<input type="button" id="chooseFile" value="Choisir un fichier" class="btn btn-primary btn-sm">
 				<label for="chooseFile" id="choosedFile"></label><br>
-				<input type="button" id="chooseTrans" value="Choisir la transition" class="btn btn-primary">
+				<input type="button" id="chooseTrans" value="Choisir la transition" class="btn btn-primary btn-sm">
 				<label for="chooseTrans" id="choosedTrans"></label><br>
 				<label for="songVol">Volume (entre 0 et 1)</label>
 				<span id="songVol">{{ project.songLines[0].vol }}</span>
-			</div>
+			</form>
 		</article>
 	</div>
 	<div id="popUp" class="modal fade">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">x</button>
@@ -48,8 +52,8 @@
 				<div id="popUpModif" class="modal-body"></div>
 				<div class="modal-footer">
 					<div class="btn-group">
-						<input type="button" onclick="endEdit();" id="validerPopUp" value="Valider">
-						<input type="button" value="Annuler" data-dismiss="modal">
+						<input class="btn btn-primary" type="button" onclick="endEdit();" id="validerPopUp" value="Valider">
+						<input class="btn btn-warning" type="button" value="Annuler" data-dismiss="modal">
 					</div>
 				</div>
 			</div>
@@ -61,9 +65,11 @@
 	{{ parent() }}
 	<script src="{{ asset('bundles/xifsoundorganiser/edit.js') }}"></script>
 	<script>
-		PROJECT = {{ project.json|raw }};
-		baseURL = "{{ path('xif_file_get_base') }}";
-		open_proj();
+		$(function(){
+			window.PROJECT = {{ project.json|raw }};
+			window.baseURL = "{{ path('xif_file_get_base') }}";
+			open_proj();
+		});
 	</script>
 {% endblock %}
 

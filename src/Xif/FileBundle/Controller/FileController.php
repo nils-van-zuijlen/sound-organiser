@@ -177,4 +177,12 @@ class FileController extends Controller {
 
 		return new JsonResponse($filesArray);
 	}
+
+	public function getNameAction($id)
+	{
+		$file = $this->getDoctrine()->getManager()->getRepository('XifFileBundle:File')->find($id);
+		if ($file === null)
+			throw $this->createNotFoundException('The file of id "'.$id.'" does not exist in database.');
+		return new Response($file->getOriginalName());
+	}
 }

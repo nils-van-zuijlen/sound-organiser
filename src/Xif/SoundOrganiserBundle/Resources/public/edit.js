@@ -24,7 +24,7 @@ var editing = false;
 var baseURL;
 
 function load_song_listener(i, LI) {
-	$('#songList li song').each(function(index) {
+	$('#songList li').each(function(index) {
 		$(this).off('click.Xif');
 		$(this).on('click.Xif', function() {
 			load_song(index);
@@ -103,6 +103,8 @@ function load_song(NUM) {
 	NOW = NUM;
 	var SONG = PROJECT.songs[NUM];
 
+	$('#songList li').removeClass('list-group-item-info');
+	$($('#songList li')[NOW]).addClass('list-group-item-info');
 	$('#songName').html(SONG.name);
 	if (SONG.descr.length) {
 		$('#songDescr').html(SONG.descr);
@@ -112,27 +114,15 @@ function load_song(NUM) {
 		$('#songDescr').addClass('help-block');
 	}
 	$('#choosedTrans').html(songtype_to_str(SONG));
-	$('#songVol')html(SONG.vol);
+	$('#songVol').html(SONG.vol);
 	getFileName();
 }
 
 function getFileName() {
 	if (PROJECT.songs[NOW].file){
-		var xhr = new XMLHttpRequest();
-		xhr.open('HEAD', baseURL + '/' + PROJECT.songs[NOW].file);
-		xhr.addEventListener('readystatechange', function(){
-			if (xhr.readyState == XMLHttpRequest.DONE) {
-				if (xhr.status == 200) {
-					/^filename="([\s\S]+)"/.test(xhr.getResponseHeader('Content-Disposition'));
-					$('#choosedFile').html(RegExp.$1);
-				} else {
-					$('#choosedFile').html('Une erreur '/* + xhr.status + ' : ' + xhr.statusText*/ + ' nous empèche de savoir quel est le fichier choisi');
-				}
-			}
-		});
-		xhr.send(null);
+		$('#choosedFile').load(baseURL + '/' + PROJECT.songs[NOW].file+'/name');
 	} else {
-		$('#choosedFile').html('Choisissez un fichier');
+		$('#choosedFile').text('Choisissez un fichier');
 	}
 }
 
@@ -144,26 +134,41 @@ function edit(elementId) {
 	console.log('Élément ' + elementId + ' est en cours d\'édition');
 	var element = $('#'+elementId),
 		contenu = element.text();
-	var input = $('<input class="form-control" />');
+	var input = $('<input class="form-control" />'),
+		toAppend;
 	if (elementId == 'songVol') {
-		input.attr({
-			type: 'range',
-			step: 0.01,
-			min: 0,
-			max: 1,
-			value: parseFloat(contenu, 10)
+		input
+			.attr({
+				type: 'range',
+				step: 0.01,
+				min: 0,
+				max: 1,
+				value: parseFloat(contenu, 10)
+			})
+			.removeClass('form-control')
+			.css('margin-left', '1em');
+		toAppend = $('<div></div>');
+		var value = $('<span id="volEditValue">'+contenu+'</span>');
+		toAppend.append(value);
+		toAppend.append(input);
+		toAppend.css('display', 'flex');
+		value.css();
+		input.on('change.Xif', function() {
+			$('#volEditValue').html(input.val());
 		});
 	} else if (/Descr$/.test(elementId) && element.hasClass('help-block')) {
 		input.attr('type', 'text');
 		element.removeClass('help-block');
+		toAppend = input;
 	} else {
 		input.attr({
 			type: 'text',
 			value: contenu
 		});
+		toAppend = input;
 	}
 	(function(contenu, input) {
-		input.on('blur.Xif', endEdit);
+		//input.on('blur.Xif', endEdit);
 		input.on('keydown.Xif', function(e) {
 			if (e.keyCode == 27) {
 				editing = false;
@@ -176,7 +181,7 @@ function edit(elementId) {
 		});
 	})(contenu, input);
 	element.html('');
-	element.append(input);
+	element.append(toAppend);
 	input.focus();
 }
 
@@ -195,8 +200,9 @@ function chooseFile() {
 
 	//boutons
 	var buttons = [
-			$('<input type="button" class="btn btn-primary" value="Mes fichiers">'),
-			$('<input type="button" class="btn btn-default" value="Importer">')
+			//classes btn-primary and btn-default will be inverted in @func chooseMyFiles()
+			$('<input type="button" class="btn btn-default" value="Mes fichiers">'),
+			$('<input type="button" class="btn btn-primary" value="Importer">')
 		],
 		div = $('<div class="btn-group"></div>');
 
@@ -206,6 +212,7 @@ function chooseFile() {
 	buttons[1].on('click.Xif', function() {
 		var place = $('#popUpModif');
 		place.html('');
+		$('#popUpButtons input').toggleClass('btn-primary btn-default');
 
 		var iframe = $('<iframe></iframe>');
 		iframe.attr('src', baseURL.replace(/get$/, 'add'));
@@ -221,8 +228,11 @@ function chooseFile() {
 	chooseMyFiles();
 }
 
-function chooseMyFiles() {
+function chooseMyFiles(reload) {
 	$('#popUpModif').html('');
+	if (typeof reload == "undefined")
+		$('#popUpButtons input').toggleClass('btn-primary btn-default');
+
 	$.ajax({
 		url: baseURL+'/mine',
 		type: 'GET',
@@ -236,10 +246,10 @@ function chooseMyFiles() {
 			for (var i = response.length - 1; i >= 0; i--) {
 				var TDs = [
 						$('<td></td>'),
-						$('<td>'+response[i].name+'</td>'),
+						$('<td id="file'+response[i].id+'">'+response[i].name+'</td>'),
 						$('<td></td>')
 					],
-					radio = $('<input class="form-control" type="radio" name="file" value="'+response[i].id+'">'),
+					radio = $('<input type="radio" name="file" value="'+response[i].id+'">'),
 					link  = $('<button>Supprimer</button>'),
 					tr    = $('<tr></tr>');
 
@@ -256,6 +266,7 @@ function chooseMyFiles() {
 								},
 								success: function(){
 									tr.remove();
+									chooseMyFiles(true);
 								}
 							});
 						}
@@ -316,8 +327,8 @@ function chooseTrans() {
 			$('<label>Autonext 2 </label>')
 		]
 		auto = [
-			$('<input type="checkbox" id="auto1" class="form-control">'),
-			$('<input type="checkbox" id="auto2" class="form-control">')
+			$('<input type="checkbox" id="auto1">'),
+			$('<input type="checkbox" id="auto2">')
 		];
 
 	//insertion
@@ -368,9 +379,9 @@ function endEdit() {
 		case 'trans':
 			$('#popUp').modal('hide');
 
-			var type = $('select[name="type"]>option:selected').value,
-				trans1 = $('select[name="trans1"]>option:selected').value,
-				trans2 = $('select[name="trans2"]>option:selected').value;
+			var type = $('select[name="type"]>option:selected').val(),
+				trans1 = $('select[name="trans1"]>option:selected').val(),
+				trans2 = $('select[name="trans2"]>option:selected').val();
 			if ($('#auto1').prop('checked')) trans1 += 'n';
 			if ($('#auto2').prop('checked')) trans2 += 'n';
 			
@@ -394,7 +405,7 @@ function endEdit() {
 			PROJECT.songs[NOW].trans[2] = trans2;
 
 			$('#choosedTrans').html(songtype_to_str(PROJECT.songs[NOW]));
-			$('songList span:eq('+NOW+')').html('(' + songtype_to_str(PROJECT.songs[NOW]) + ')');
+			$($('#songList span')[NOW]).html('(' + songtype_to_str(PROJECT.songs[NOW]) + ')');
 			break;
 
 		case 'file':
@@ -417,13 +428,7 @@ function endEdit() {
 			});
 
 			PROJECT.songs[NOW].file = selectedId;
-			$('#choosedFile').html(
-				selected
-				.get()
-				.parentNode
-				.nextElementSibling
-				.innerHTML
-			);
+			$('#choosedFile').html($('#file'+selectedId).text());
 			break;
 
 		case 'songName':
@@ -452,7 +457,7 @@ function endEdit() {
 				}
 			});
 
-			$('songList song:eq('+NOW+')').html(contenu);
+			$($('#songList song')[NOW]).html(contenu);
 			PROJECT.songs[NOW].name = contenu;
 			element.html(contenu);
 			break;
@@ -475,13 +480,13 @@ function endEdit() {
 				}
 			});
 
-			$('songList descr:eq('+NOW+')').html(contenu);
+			$($('#songList descr')[NOW]).html(contenu);
 			PROJECT.songs[NOW].descr = contenu;
 			if (contenu.length) {
 				element.html(contenu);
 				element.removeClass('help-block');
 			} else {
-				element.html('Pas de description';)
+				element.html('Pas de description');
 				element.addClass('help-block');
 			}
 			break;
@@ -572,24 +577,25 @@ function addSong() {
 		endEdit();
 	}
 
-	$.ajax({
-		url: document.location.href,
-		type: 'POST',
-		data: 'addSong=true',
-		dataType: 'json',
-		error: function(){
-			alert('L\'ajout du son a échoué suite à une erreur '/* + xhr.status + ': ' + xhr.responseText*/);
-		}
-		success: function (response) {
+	var xhr = new XMLHttpRequest;
+	xhr.open('POST', document.location.href);
+	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhr.addEventListener('readystatechange', function(event) {
+		if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+			var response = JSON.parse(xhr.responseText);
 			PROJECT.songs.push(response);
 
-			var li = $('<li><song>'+response.name+'</song> <descr>'+response.descr+'</descr> <span>('+songtype_to_str(response)+')</span></li>');
+			var li = $('<li class="list-group-item"><song>'+response.name+'</song> <descr>'+response.descr+'</descr> <span>('+songtype_to_str(response)+')</span></li>');
 
 			load_song_listener(PROJECT.songs.length - 1, li);
 			$('#songList').append(li);
 			load_song(PROJECT.songs.length - 1);
+		} else if (xhr.readyState === XMLHttpRequest.DONE && xhr.status != 200) {
+			console.error('Erreur lors de l\'ajout du son');
+			alert('Erreur lors de l\'ajout du son');
 		}
 	});
+	xhr.send('addSong=true');
 	
 	console.log('Ajout d\'un son');
 }

@@ -18,7 +18,7 @@
 				Écrit par {{ actu.auteur.username }} le {{ actu.datePublication|date('d/m/Y à H:i') }}.
 			</p>
 			{% if is_granted('ROLE_ADMIN') %}
-				<a href="{{ path('xif_core_editactu', {'id': actu.id}) }}" class="btn btn-warning">Modifier</a>
+				<a href="{{ path('xif_core_editactu', {'id': actu.id}) }}" class="btn btn-warning">Modifier</a><br>
 			{% endif %}
 			<ul class="pagination">
 				{% if actu.id > 1 %}

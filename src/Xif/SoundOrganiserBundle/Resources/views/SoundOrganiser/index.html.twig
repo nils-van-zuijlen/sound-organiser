@@ -15,7 +15,7 @@
 	<div class="row">
 		<div class="col-lg-8 col-lg-offset-2">
 			<a href="{{ path('xif_soundorganiser_makeprojectpage') }}" class="btn btn-primary">Nouveau</a>
-			<table class="table">
+			<table class="table table-striped table-condensed">
 				<thead>
 					<tr>
 						<th>Titre</th>
@@ -31,9 +31,11 @@
 							<td>{{ project.description }}</td>
 							<td>{{ project.dateCreation|date('d/m/Y') }}</td>
 							<td>
-								<a href="{{ path('xif_soundorganiser_edit', {'id': project.id}) }}">Éditer</a>
-								<a href="{{ path('xif_soundorganiser_playpage', {'id': project.id}) }}">Lire</a>
-								<a href="{{ path('xif_soundorganiser_delete', {'id': project.id}) }}" onclick="return confirm('Toute suppression est définitive.\nVoulez vous supprimer ce projet?')">Supprimer</a>
+								<div class="btn-group">
+									<a href="{{ path('xif_soundorganiser_playpage', {'id': project.id}) }}" class="btn btn-success">Lire</a>
+									<a href="{{ path('xif_soundorganiser_edit', {'id': project.id}) }}" class="btn btn-primary">Éditer</a>
+									<a href="{{ path('xif_soundorganiser_delete', {'id': project.id}) }}" onclick="return confirm('Toute suppression est définitive.\nVoulez vous supprimer ce projet?')" class="btn btn-danger">Supprimer</a>
+								</div>
 							</td>
 						</tr>
 					{% else %}

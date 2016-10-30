@@ -22,7 +22,7 @@ class CoreController extends Controller {
 	 */
 	public function indexAction() {
 		$entityManager = $this->getDoctrine()->getManager();
-		$actus = $entityManager->getRepository('XifCoreBundle:Actus')->getLasts(self::NB_ACTUS_IN_CAROUSEL);
+		$actus = $entityManager->getRepository('XifCoreBundle:Actus')->getLasts(self::NB_ACTUS_IN_INDEX);
 
 		return $this->render(
 			'XifCoreBundle:Core:index.html.twig',

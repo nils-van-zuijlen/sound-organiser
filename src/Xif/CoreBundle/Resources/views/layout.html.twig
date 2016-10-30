@@ -9,22 +9,30 @@
 	<title>{% block title %}SoundOrganiser{% endblock %}</title>
 	{% block styles %}
 		<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.css') }}" />
-		<link rel="stylesheet" href="{{ asset('bundles/core/css/layout.css') }}" />
+		<link rel="stylesheet" href="{{ asset('bundles/xifcore/layout.css') }}" />
 	{% endblock %}
 	<link rel="icon" type="image/svg" href="{{ asset('bundles/xifcore/icon.svg') }}" />
 	<link rel="icon" href="{{ asset('bundles/xifcore/icon.png') }}" type="image/png" />
 </head>
 <body>
-	<div class="navbar navbar-inverse navbar-static-top">
+	<div class="navbar navbar-default navbar-static-top">
 		<div class="container">
 			<div class="navbar-header">
-				<a href="{{ path('xif_core_homepage') }}" style="color: black;">
-					<img src="{{ asset('bundles/xifcore/icon.svg') }}">
+				<img src="{{ asset('bundles/xifcore/icon.svg') }}" class="navbar-brand">
+				<a href="{{ path('xif_core_homepage') }}" class="navbar-brand">
 					SoundOrganiser
 				</a>
 			</div>
 
-			<ul class="nav navbar-nav">
+			{% if is_granted('ROLE_ADMIN') %}
+				<ul class="nav navbar-nav">
+					<li><a href="{{ path('xif_user_homepage') }}">
+						Administration
+					</a></li>
+				</ul>
+			{% endif %}
+
+			<ul class="nav navbar-nav pull-right">
 				{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 					<li><a href="{{ path('fos_user_profile_show')}}">
 						Mon compte
@@ -32,11 +40,6 @@
 					<li><a href="{{ path('fos_user_security_logout') }}">
 						Se déconnecter
 					</a></li>
-					{% if is_granted('ROLE_ADMIN') %}
-						<li><a href="{{ path('xif_user_homepage') }}">
-							Administration
-						</a></li>
-					{% endif %}
 				{% else %}
 					<li><a href="{{ path('fos_user_security_login') }}">
 						Se connecter
@@ -68,7 +71,7 @@
 
 	<footer class="footer">
 		<div class="container">
-			<p>
+			<p class="first">
 				※
 				<a href="{{ path('xif_core_creditspage') }}">Crédits</a>
 				※
@@ -78,15 +81,15 @@
 				※
 			</p>
 			<hr />
-			<p>
+			<p class="last">
 				©2016 and after, Nils VAN ZUIJLEN
 			</p>
 		</div>
 	</footer>
 
 	{% block scripts %}
-		<script type="text/javascript" src="{{ asset('bootstrap/jquery-3.1.0.min.js') }}"></script>
-		<script type="text/javascript" src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+		<script type="text/javascript" src="{{ asset('bootstrap/jquery-3.1.0.js') }}"></script>
+		<script type="text/javascript" src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
 		<!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>

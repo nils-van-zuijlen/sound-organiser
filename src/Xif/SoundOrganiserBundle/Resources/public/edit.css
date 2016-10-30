@@ -1,5 +1,9 @@
 /* src/Xif/SoundOrganiserBundle/Resources/public/edit.css */
 
+.well {
+	margin-top: 1em;
+}
+
 label {
 	display: inline-block;
 	padding: 0.25em;
@@ -9,13 +13,13 @@ label {
 song {
 	font-weight: bold;
 	text-decoration: underline;
+}
+
+#songList li {
 	cursor: pointer;
-	color: #BABA36;
 }
 
 descr {
-	margin-left: 10px;
-	color: #5E5EBF;
 	font-size: 10px;
 	font-style: italic;
 }
@@ -48,6 +52,6 @@ iframe {
 	border: none;
 }
 
-/* * {
-	outline: 2px black;
-}*/
+* {
+	/*outline: 2px black;*/
+}

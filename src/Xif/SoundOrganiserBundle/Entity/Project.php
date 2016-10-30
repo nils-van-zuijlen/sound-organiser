@@ -50,6 +50,10 @@ class Project
 	 */
 	protected $songLines;
 
+	static public function escape($string)
+	{
+		return preg_replace('#"#', '\\"', $string);
+	}
 
 	/**
 	 * Get id
@@ -165,7 +169,7 @@ class Project
 
 	public function getJson() {
 		$json = '{ "name": "' .
-			$this->title .
+			self::escape($this->title) .
 			'", "path": "", "vol_factor": 0.7, "songs": [';
 		foreach ($this->songLines as $line) {
 			$json .= $line->getJson();

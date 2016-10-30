@@ -10,7 +10,6 @@ use Xif\SoundOrganiserBundle\Entity\Project;
 use Xif\SoundOrganiserBundle\Entity\SongLine;
 use Xif\UserBundle\Entity\User;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Controlleurs principaux de SoundOrganiserBundle
@@ -52,7 +51,7 @@ class SoundOrganiserController extends Controller {
 			->getRepository('XifSoundOrganiserBundle:Project')
 			->find($id)
 			) {
-			throw new NotFoundHttpException('Projet inexistant.');
+			throw $this->createNotFoundException('Projet inexistant.');
 		}
 
 		if (!$this
@@ -65,7 +64,7 @@ class SoundOrganiserController extends Controller {
 				->get('security.authorization_checker')
 				->isGranted('ROLE_ADMIN'))
 			) {
-			throw new AccessDeniedException('Vous n\'êtes pas le propriétaire du fichier');
+			throw $this->createAccessDeniedException('Vous n\'êtes pas le propriétaire du fichier');
 		}
 
 		return $this->render(
@@ -116,11 +115,11 @@ class SoundOrganiserController extends Controller {
 			->getRepository('XifSoundOrganiserBundle:Project')
 			->find($id)
 			) {
-			throw new NotFoundHttpException('Projet inexistant.');
+			throw $this->createNotFoundException('Projet inexistant.');
 		}
 
-		if (!$this->getUser()->getId()== $project->getOwner()->getId()) {
-			throw new AccessDeniedException('Vous n\'êtes pas le propriétaire du fichier');
+		if (!$this->getUser()->getId() == $project->getOwner()->getId()) {
+			throw $this->createAccessDeniedException('Vous n\'êtes pas le propriétaire du fichier');
 		}
 
 		return $this->render(
@@ -139,17 +138,11 @@ class SoundOrganiserController extends Controller {
 			->getRepository('XifSoundOrganiserBundle:Project')
 			->find($projId)
 			) {
-			return new Response(
-				'Projet inexistant.',
-				Response::HTTP_PRECONDITION_FAILED
-				);
+			throw new PreconditionFailedHttpException('Projet inexistant.');
 		}
-		if (!$this->get('security.token_storage')->getToken()->getUser()->getId()== $project->getOwner()->getId()
+		if (!$this->getUser()->getId() == $project->getOwner()->getId()
 			) {
-			return new Response(
-				'Vous n\'êtes pas le propriétaire du projet',
-				Response::HTTP_UNAUTHORIZED
-				);
+			return $this->createAccessDeniedException('Vous n\'êtes pas le propriétaire du projet');
 		}
 
 		if ($request->isMethod('POST')) {
@@ -161,16 +154,10 @@ class SoundOrganiserController extends Controller {
 					->getRepository('XifSoundOrganiserBundle:SongLine')
 					->find( (int) $POST->get('lineId'))
 					) {
-					return new Response(
-						'Son inexistant.',
-						Response::HTTP_PRECONDITION_FAILED
-						);
+					throw new PreconditionFailedHttpException('Son inexistant.');
 				}
 				if (!$songLine->getProject()->getId() == $project->getId()) {
-					return new Response(
-						'Le son n\'appartient pas au projet',
-						Response::HTTP_PRECONDITION_FAILED
-						);
+					throw new PreconditionFailedHttpException('Le son n\'appartient pas au projet');
 				}
 
 				// fichier
@@ -181,12 +168,12 @@ class SoundOrganiserController extends Controller {
 						->getRepository('XifFileBundle:File')
 						->find( (int) $POST->get('file'))
 						) {
-						throw new NotFoundHttpException('Ligne inexistante.');
+						throw $this->createNotFoundException('Ligne inexistante.');
 					}
 
 					$songLine->setFile($file);
 					$entityManager->flush();
-					return new Response(null, Response::HTTP_ACCEPTED);
+					return new Response(null);
 				}
 
 				//transition
@@ -196,42 +183,42 @@ class SoundOrganiserController extends Controller {
 						->setTrans1($POST->get('trans1'))
 						->setTrans2($POST->get('trans2'));
 					$entityManager->flush();
-					return new Response(null, Response::HTTP_ACCEPTED);
+					return new Response(null);
 				}
 
 				//nom
 				if ($POST->has('songName')) {
 					$songLine->setName((string) $POST->get('songName'));
 					$entityManager->flush();
-					return new Response(null, Response::HTTP_ACCEPTED);
+					return new Response(null);
 				}
 
 				//description
 				if ($POST->has('songDescr')) {
 					$songLine->setDescription((string) $POST->get('songDescr'));
 					$entityManager->flush();
-					return new Response(null, Response::HTTP_ACCEPTED);
+					return new Response(null);
 				}
 
 				//volume
 				if ($POST->has('songVol')) {
 					$songLine->setVol((float) $POST->get('songVol'));
 					$entityManager->flush();
-					return new Response(null, Response::HTTP_ACCEPTED);
+					return new Response(null);
 				}
 			} else {
 				//titre du projet
 				if ($POST->has('projTitle')) {
 					$project->setTitle((string) $POST->get('projTitle'));
 					$entityManager->flush();
-					return new Response(null, Response::HTTP_ACCEPTED);
+					return new Response(null);
 				}
 
 				//description du projet
 				if ($POST->has('projDescr')) {
 					$project->setDescription((string) $POST->get('projDescr'));
 					$entityManager->flush();
-					return new Response(null, Response::HTTP_ACCEPTED);
+					return new Response(null);
 				}
 
 				//nouveau son
@@ -245,7 +232,7 @@ class SoundOrganiserController extends Controller {
 						->setVol(0.7);
 					$project->addSongLine($songLine);
 					$entityManager->flush();
-					$response = new Response($songLine->getJson(), Response::HTTP_CREATED);
+					$response = new Response(substr($songLine->getJson(), 0, -1));
 					$response->headers->set('Content-Type', 'application/json');
 					return $response;
 				}
@@ -256,16 +243,10 @@ class SoundOrganiserController extends Controller {
 						->getRepository('XifSoundOrganiserBundle:SongLine')
 						->find( (int) $POST->get('removeSong'))
 						) {
-						return new Response(
-							'Ligne inexistante.',
-							Response::HTTP_PRECONDITION_FAILED
-							);
+						throw new PreconditionFailedHttpException('Ligne inexistante.');
 					}
 					if (!$songLine->getProject()->getId() == $project->getId()) {
-						return new Response(
-							'N\'appartient pas au projet',
-							Response::HTTP_PRECONDITION_FAILED
-							);
+						throw new PreconditionFailedHttpException('N\'appartient pas au projet');
 					}
 
 					$entityManager->remove($songLine);
@@ -275,21 +256,19 @@ class SoundOrganiserController extends Controller {
 			}
 		}
 
-		throw new NotFoundHttpException('Mauvais paramètres POST');
+		throw $this->createNotFoundException('Mauvais paramètres POST');
 	}
 
 	public function deleteAction($id)
 	{
-		$entityManager = $this
-			->getDoctrine()
-			->getManager();
+		$entityManager = $this->getDoctrine()->getManager();
 
 		if (null === $project = $entityManager->getRepository('XifSoundOrganiserBundle:Project')->find($id)) {
-			throw new NotFoundHttpException('Ce projet n\'existe pas');
+			throw $this->createNotFoundException('Ce projet n\'existe pas');
 		}
 
 		if (!$this->getUser()->getId()== $project->getOwner()->getId()) {
-			throw new AccessDeniedHttpException('Vous n\'êtes pas le propriétaire du fichier');
+			throw $this->createAccessDeniedException('Vous n\'êtes pas le propriétaire du fichier');
 		}
 
 		$entityManager->remove($project);
