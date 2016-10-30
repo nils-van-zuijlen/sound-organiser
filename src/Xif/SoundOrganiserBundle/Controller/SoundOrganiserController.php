@@ -265,7 +265,7 @@ class SoundOrganiserController extends Controller {
 						->setVol(0.7);
 					$project->addSongLine($songLine);
 					$entityManager->flush();
-					$response = new Response($songLine->getJson(), Response::HTTP_CREATED);
+					$response = new Response(json_encode($songLine, JSON_PRETTY_PRINT), Response::HTTP_CREATED);
 					$response->headers->set('Content-Type', 'application/json');
 					return $response;
 				}

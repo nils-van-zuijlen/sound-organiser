@@ -48,7 +48,7 @@
 	<script src="{{ asset('bundles/xifsoundorganiser/edit.js') }}"></script>
 	{{ parent() }}
 	<script>
-		PROJECT = {{ project.json|raw }};
+		PROJECT = {{ project|json_encode(128)|raw }};
 		baseURL = "{{ baseGetFileURL|raw }}";
 		open_proj();
 	</script>

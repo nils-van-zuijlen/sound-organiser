@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="xif_songline")
  * @ORM\Entity(repositoryClass="Xif\SoundOrganiserBundle\Repository\SongLineRepository")
  */
-class SongLine
+class SongLine implements \JsonSerializable
 {
 	/**
 	 * @var int
@@ -276,29 +276,20 @@ class SongLine
 		return $this->vol;
 	}
 
-	public function getJson()
+	public function jsonSerialize()
 	{
-		$return = '{ "name": "' .
-			$this->name .
-			'", "file": ';
-		if ($this->file != null) {
-			$return .= $this->file->getId();
-		} else {
-			$return .= 'false';
-		}
-		$return .= ', "vol": ' .
-			$this->vol .
-			', "trans": ["' .
-			$this->type .
-			'", "' .
-			$this->trans1 .
-			'", "' .
-			$this->trans2 .
-			'"], "descr": "' .
-			$this->description .
-			'", "id": ' .
-			$this->id .
-			' }';
-		return $return;
+		$array = array(
+			'name'  => $this->name,
+			'file'  => ($this->file === null) ? false : $this->file->getId(),
+			'vol'   => $this->vol,
+			'trans' => array(
+				$this->type,
+				($this->trans1 === null) ? '' : $this->trans1,
+				$this->trans2
+				),
+			'descr' => $this->description,
+			'id'    => $this->id
+			);
+		return $array;
 	}
 }

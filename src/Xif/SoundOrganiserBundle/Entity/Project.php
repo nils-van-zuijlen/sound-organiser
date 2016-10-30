@@ -11,7 +11,7 @@ use Xif\SoundOrganiserBundle\Entity\SongLine;
  * @ORM\Table(name="xif_project")
  * @ORM\Entity(repositoryClass="Xif\SoundOrganiserBundle\Repository\ProjectRepository")
  */
-class Project
+class Project implements \JsonSerializable
 {
 	/**
 	 * @var int
@@ -163,36 +163,18 @@ class Project
 		return $this->owner;
 	}
 
-	public function getJson() {
-		$json = '{ "name": "' .
-			$this->title .
-			'", "path": "", "vol_factor": 0.7, "songs": [';
+	public function jsonSerialize()
+	{
+		$array = array(
+			'name' => $this->title,
+			'path' => '',
+			'vol_factor' => 0.7,
+			'songs' => array()
+			);
 		foreach ($this->songLines as $line) {
-			$json .= '{ "name": "' .
-				$line->getName() .
-				'", "file": ';
-				if ($line->getFile() != null) {
-					$json .= $line->getFile()->getId();
-				} else {
-					$json .= 'false';
-				}
-			$json .= ', "vol": ' .
-				$line->getVol() .
-				', "trans": ["' .
-				$line->getType() .
-				'", "' .
-				$line->getTrans1() .
-				'", "' .
-				$line->getTrans2() .
-				'"], "descr": "' .
-				$line->getDescription() .
-				'", "id": ' .
-				$line->getId() .
-				' },';
+			$array['songs'][] = $line->jsonSerialize();
 		}
-		$json .= '] }';
-
-		return $json;
+		return $array;
 	}
 
 	/**
