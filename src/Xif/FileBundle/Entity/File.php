@@ -17,6 +17,8 @@ use Xif\UserBundle\Entity\User;
  */
 class File
 {
+	const UPLOAD_ROOT_DIR = '/var/www/html/SoundOrganiser/src/Xif/FileBundle/Uploads/';
+
 	/**
 	 * @var int
 	 *
@@ -130,14 +132,9 @@ class File
 	 * Méthodes pour l'upload de fichiers
 	 */
 
-	protected function getUploadRootDir()
-	{
-		return '/var/www/html/SoundOrganiser/src/Xif/FileBundle/Uploads/';
-	}
-
 	public function getLocation()
 	{
-		return $this->getUploadRootDir() . $this->id . '.' . $this->extension;
+		return self::UPLOAD_ROOT_DIR . $this->id . '.' . $this->extension;
 	}
 
 	public function setFile(UploadedFile $file)
@@ -153,7 +150,6 @@ class File
 
 	/**
 	 * @ORM\PrePersist()
-	 * @ORM\PreUpdate()
 	 */
 	public function preUpload()
 	{
@@ -165,12 +161,11 @@ class File
 
 	/**
 	 * @ORM\PostPersist()
-	 * @ORM\PostUpdate()
 	 */
 	public function upload()
 	{
 		$this->file->move(
-			$this->getUploadRootDir(),
+			self::UPLOAD_ROOT_DIR,
 			$this->id . '.' . $this->extension
 			);
 	}

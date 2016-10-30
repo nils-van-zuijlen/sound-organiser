@@ -7,10 +7,12 @@
 {% endblock %}
 
 {% block body %}
-	<article>
-		<h2>Erreur {{ status_code }}: {{ status_text }}</h2>
-		<p>
-			Une erreur est survenue. Veuillez nous <a href="mail:{{ webmaster_mail }}">en informer</a> si elle se répete en précisant ce que vous étiez en train de faire.
-		</p>
-	</article>
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2">
+			<h2>Erreur {{ status_code }}: {{ status_text }}</h2>
+			<p>
+				Une erreur est survenue. Veuillez <a href="mail:{{ webmaster_mail }}">nous en informer</a> si elle se répete en précisant ce que vous étiez en train de faire.
+			</p>
+		</div>
+	</div>
 {% endblock %}

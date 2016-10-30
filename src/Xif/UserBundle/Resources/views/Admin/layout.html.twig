@@ -6,18 +6,18 @@
 {% block title %}Administration – {{ parent() }}{% endblock %}
 
 {% block body %}
-	<aside>
-		<div class="a-list">
-			<a href="{{ path('xif_user_viewusers') }}">Voir les utilisateurs</a>
-			<a href="{{ path('xif_user_viewfiles') }}">Voir les fichiers</a>
-			<a href="{{ path('xif_core_explorepage', {'admin': 'true'}) }}">Voir les projets</a>
-			<a href="{{ path('xif_core_newactu') }}">Publier une actualité</a>
+	<aside class="col-lg-4">
+		<ul class="list-group">
+			<a href="{{ path('xif_user_viewusers') }}" class="list-group-item">Voir les utilisateurs</a>
+			<a href="{{ path('xif_user_viewfiles') }}" class="list-group-item">Voir les fichiers</a>
+			<a href="{{ path('xif_core_explorepage', {'admin': 'true'}) }}" class="list-group-item">Voir les projets</a>
+			<a href="{{ path('xif_core_newactu') }}" class="list-group-item">Publier une actualité</a>
 			{% if is_granted('ROLE_SUPER_ADMIN') %}
-				<a href="{{ asset('app_dev.php') }}">Controleur frontal de développement</a>
+				<a href="{{ asset('app_dev.php') }}" class="list-group-item">Controleur frontal de développement</a>
 			{% endif %}
-		</div>
+		</ul>
 	</aside>
-	<article class="asideNext">
+	<article class="col-lg-8">
 		<h2>Administration</h2>
 		{% block admin_content %}
 		{% endblock admin_content %}

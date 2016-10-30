@@ -20,7 +20,11 @@ class ContactType extends AbstractType {
 			->add(
 				'senderName',
 				TextType::class,
-				array('attr' => array('minlength' => 3))
+				array(
+					'attr' => array(
+						'minlength' => 3,
+						),
+					)
 				)
 			->add(
 				'senderMail',
@@ -29,17 +33,31 @@ class ContactType extends AbstractType {
 			->add(
 				'subject',
 				TextType::class,
-				array('attr' => array('minlength' => 3, 'maxlength' =>255))
+				array(
+					'attr' => array(
+						'minlength' => 3,
+						'maxlength' => 255,
+						),
+					)
 				)
 			->add(
 				'body',
 				TextareaType::class,
-				array('attr' => array('minlength' => 10))
+				array(
+					'attr' => array(
+						'minlength' => 10,
+						),
+					)
 				)
 			->add(
 				'send',
 				SubmitType::class,
-				array('label' => 'Envoyer')
+				array(
+					'label' => 'Envoyer',
+					'attr'  => array(
+						'class' => 'btn btn-primary',
+						),
+					)
 				)
 			;
 	}

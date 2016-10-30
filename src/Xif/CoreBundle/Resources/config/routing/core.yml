@@ -1,0 +1,49 @@
+# src/Xif/CoreBundle/Resources/config/routing/core.yml
+
+# Page d'accueil
+xif_core_homepage:
+    path:     /
+    defaults:
+        _controller: XifCoreBundle:Core:index
+    methods: GET
+
+# Exploration des projets publics.
+# Possède une version admin
+xif_core_explorepage:
+    path:     /explore/{page}.{admin}
+    defaults:
+        _controller: XifCoreBundle:Core:explore
+        page:  1
+        admin: false
+    requirements:
+        page:  \d*
+        admin: true|false
+    methods: GET
+
+# Crédits du projet
+xif_core_creditspage:
+    path:     /credits
+    defaults:
+        _controller: XifCoreBundle:Core:credits
+    methods: GET
+
+# Conditions d'utilisation
+xif_core_conditionspage:
+    path:     /conditions
+    defaults:
+        _controller: XifCoreBundle:Core:conditions
+    methods: GET
+
+# Page d'aide
+xif_core_help:
+    path:     /help
+    defaults:
+        _controller: XifCoreBundle:Core:help
+    methods: GET
+
+# Page de contact
+xif_core_contact:
+    path:     /contact
+    defaults:
+        _controller: XifCoreBundle:Core:contact
+    methods: GET|POST

@@ -1,17 +1,6 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {{ form_start(form, { 'action': path('fos_user_resetting_reset', {'token': token}), 'attr': { 'class': 'fos_user_resetting_reset' } }) }}
-	{{ form_errors(form) }}
-	<div class="form-group">
-		{{ form_label(form.plainPassword.first) }}
-		{{ form_errors(form.plainPassword.first, {'attr': {'class': 'form-error'} }) }}
-		{{ form_widget(form.plainPassword.first) }}
-	</div>
-	<div class="form-group">
-		{{ form_label(form.plainPassword.second) }}
-		{{ form_errors(form.plainPassword.second, {'attr': {'class': 'form-error'} }) }}
-		{{ form_widget(form.plainPassword.second) }}
-	</div>
 	{{ form_rest(form) }}
-	<input type="submit" value="{{ 'resetting.reset.submit'|trans }}" />
+	<input type="submit" value="{{ 'resetting.reset.submit'|trans }}" class="btn btn-primary" />
 {{ form_end(form) }}

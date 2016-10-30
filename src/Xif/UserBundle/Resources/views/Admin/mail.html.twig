@@ -6,5 +6,7 @@
 
 {% block admin_content %}
 	<h3>Envoyer un mail à {{ user.username }}</h3>
-	{{ form(form) }}
+	<div class="well">
+		{{ form(form) }}
+	</div>
 {% endblock %}

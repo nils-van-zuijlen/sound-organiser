@@ -3,9 +3,7 @@
 	[
 		{
 			"folder_exclude_patterns":
-			[
-				"var"
-			],
+			[],
 			"path": "."
 		}
 	]

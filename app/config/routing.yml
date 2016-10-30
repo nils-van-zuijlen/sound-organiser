@@ -26,8 +26,7 @@ xif_user:
     prefix:   /admin
 
 xif_core:
-    resource: "@XifCoreBundle/Resources/config/routing.yml"
-    prefix:   /
+    resource: "@XifCoreBundle/Resources/config/routing/all.yml"
 
 xif_sound_organiser:
     resource: "@XifSoundOrganiserBundle/Resources/config/routing.yml"

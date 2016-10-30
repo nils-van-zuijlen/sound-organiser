@@ -1,14 +1,14 @@
 // src/Xif/SoundOrganiserBundle/Resources/public/edit.js
 
 /**
- * @var array PROJECT Projet complet
  * Hydraté via PHP depuis la BDD dans le template HTML
+ * @var array PROJECT Projet complet
  */
 var PROJECT;
 
 /**
  * Numéro du son actuel
- * @type {int}
+ * @var {int}
  */
 var NOW;
 
@@ -19,61 +19,43 @@ var editing = false;
 
 /**
  * URL du dossier contenant les sons
- * @type {string}
+ * @var {string}
  */
 var baseURL;
 
 function load_song_listener(i, LI) {
-	LI.getElementsByTagName('song')[0].onclick =
-		function() {
-			load_song(i);
-		};
+	$('#songList li').each(function(index) {
+		$(this).off('click.Xif');
+		$(this).on('click.Xif', function() {
+			load_song(index);
+		});
+	});
 }
 
 function open_proj() {
 	///affichage
 	//transitions de la liste
-	var listElements = document.getElementById('songList').getElementsByTagName('li');
-	for (var i = listElements.length - 1; i >= 0; i--) {
-		var LI = listElements[i];
-
-		LI.
-			getElementsByTagName('span')[0].
-			innerHTML = 
-				'(' +
-				songtype_to_str(PROJECT.songs[i]) +
-				')';
-
-		load_song_listener(i, LI);
-	}
+	var listElements = $('#songList li');
+	listElements.each(
+		function (index) {
+			this
+				.getElementsByTagName('span')[0]
+				.innerHTML = '(' + songtype_to_str(PROJECT.songs[index]) + ')';
+		}
+	);
 
 	//transition du son affiché
-	document.
-		getElementById('choosedTrans').
-		innerHTML = songtype_to_str(PROJECT.songs[0]);
+	$('#choosedTrans').html(songtype_to_str(PROJECT.songs[0]));
 
 	///évenements
-	document.
-		getElementById('projTitle').
-		addEventListener('dblclick', function(){edit('projTitle');});
-	document.
-		getElementById('projDescr').
-		addEventListener('dblclick', function(){edit('projDescr');});
-	document.
-		getElementById('songName').
-		addEventListener('dblclick', function(){edit('songName');});
-	document.
-		getElementById('songDescr').
-		addEventListener('dblclick', function(){edit('songDescr');});
-	document.
-		getElementById('songVol').
-		addEventListener('dblclick', function(){edit('songVol');});
-	document.
-		getElementById('chooseFile').
-		addEventListener('click', chooseFile);
-	document.
-		getElementById('chooseTrans').
-		addEventListener('click', chooseTrans);
+	$('#projTitle').on('dblclick.Xif', function(){edit('projTitle');});
+	$('#projDescr').on('dblclick.Xif', function(){edit('projDescr');});
+	$('#songName').on('dblclick.Xif', function(){edit('songName');});
+	$('#songDescr').on('dblclick.Xif', function(){edit('songDescr');});
+	$('#songVol').on('dblclick.Xif', function(){edit('songVol');});
+	$('#chooseFile').on('click.Xif', chooseFile);
+	$('#chooseTrans').on('click.Xif', chooseTrans);
+	load_song_listener();
 
 	//on charge le premier son
 	setTimeout(load_song, 5, 0);
@@ -121,36 +103,26 @@ function load_song(NUM) {
 	NOW = NUM;
 	var SONG = PROJECT.songs[NUM];
 
-	document.getElementById('songName').innerHTML = SONG.name;
+	$('#songList li').removeClass('list-group-item-info');
+	$($('#songList li')[NOW]).addClass('list-group-item-info');
+	$('#songName').html(SONG.name);
 	if (SONG.descr.length) {
-		document.getElementById('songDescr').innerHTML = SONG.descr;
-		document.getElementById('songDescr').className = '';
+		$('#songDescr').html(SONG.descr);
+		$('#songDescr').removeClass('help-block');
 	} else {
-		document.getElementById('songDescr').innerHTML = 'Pas de description';
-		document.getElementById('songDescr').className = 'no-descr';
+		$('#songDescr').html('Pas de description');
+		$('#songDescr').addClass('help-block');
 	}
-	document.getElementById('choosedTrans').innerHTML = songtype_to_str(SONG);
-	document.getElementById('songVol').innerHTML = SONG.vol;
+	$('#choosedTrans').html(songtype_to_str(SONG));
+	$('#songVol').html(SONG.vol);
 	getFileName();
 }
 
 function getFileName() {
 	if (PROJECT.songs[NOW].file){
-		var xhr = new XMLHttpRequest();
-		xhr.open('HEAD', baseURL + '/' + PROJECT.songs[NOW].file);
-		xhr.addEventListener('readystatechange', function(){
-			if (xhr.readyState == XMLHttpRequest.DONE) {
-				if (xhr.status == 200) {
-					/^filename="([\s\S]+)"/.test(xhr.getResponseHeader('Content-Disposition'));
-					document.getElementById('choosedFile'). innerHTML = RegExp.$1;
-				} else {
-					document.getElementById('choosedFile'). innerHTML = 'Une erreur ' + xhr.status + ' : ' + xhr.statusText + ' nous empèche de savoir quel est le fichier choisi';
-				}
-			}
-		});
-		xhr.send(null);
+		$('#choosedFile').load(baseURL + '/' + PROJECT.songs[NOW].file+'/name');
 	} else {
-		document.getElementById('choosedFile'). innerHTML = 'Choisissez un fichier';
+		$('#choosedFile').text('Choisissez un fichier');
 	}
 }
 
@@ -160,37 +132,57 @@ function edit(elementId) {
 	}
 	editing = elementId;
 	console.log('Élément ' + elementId + ' est en cours d\'édition');
-	var element = document.getElementById(elementId),
-		contenu = element.innerHTML;
-	var input = document.createElement('input');
+	var element = $('#'+elementId),
+		contenu = element.text();
+	var input = $('<input class="form-control" />'),
+		toAppend;
 	if (elementId == 'songVol') {
-		input.type = 'range';
-		input.step = 0.01;
-		input.min = 0;
-		input.max = 1;
-		input.value = parseFloat(contenu, 10);
-	} else if (/Descr$/.test(elementId) && element.className == 'no-descr') {
-		input.type = 'text';
+		input
+			.attr({
+				type: 'range',
+				step: 0.01,
+				min: 0,
+				max: 1,
+				value: parseFloat(contenu, 10)
+			})
+			.removeClass('form-control')
+			.css('margin-left', '1em');
+		toAppend = $('<div></div>');
+		var value = $('<span id="volEditValue">'+contenu+'</span>');
+		toAppend.append(value);
+		toAppend.append(input);
+		toAppend.css('display', 'flex');
+		value.css();
+		input.on('change.Xif', function() {
+			$('#volEditValue').html(input.val());
+		});
+	} else if (/Descr$/.test(elementId) && element.hasClass('help-block')) {
+		input.attr('type', 'text');
+		element.removeClass('help-block');
+		toAppend = input;
 	} else {
-		input.type = 'text';
-		input.value = contenu;
+		input.attr({
+			type: 'text',
+			value: contenu
+		});
+		toAppend = input;
 	}
 	(function(contenu, input) {
-		input.addEventListener('blur', endEdit);
-		input.addEventListener('keydown', function(e) {
+		//input.on('blur.Xif', endEdit);
+		input.on('keydown.Xif', function(e) {
 			if (e.keyCode == 27) {
 				editing = false;
-				input.parentNode.innerHTML = contenu;
+				input.get().parentNode.innerHTML = contenu;
 				console.log('Modifications annulées');
 			} else if (e.keyCode == 13) {
-				input.removeEventListener('blur', endEdit);
+				input.off('blur.Xif', endEdit);
 				endEdit();
 			}
 		});
 	})(contenu, input);
-	element.innerHTML = '';
-	element.appendChild(input);
-	input.select();
+	element.html('');
+	element.append(toAppend);
+	input.focus();
 }
 
 function chooseFile() {
@@ -199,132 +191,111 @@ function chooseFile() {
 	}
 	editing = 'file';
 
-	var popUp = document.getElementById('popUp'),
-		frame = document.getElementById('popUpModif'),
-		popUpButtons = document.getElementById('popUpButtons');
+	var popUp = $('#popUp'),
+		frame = $('#popUpModif'),
+		popUpButtons = $('#popUpButtons');
 
-	frame.innerHTML = '';
-	popUpButtons.innerHTML = '';
+	frame.html('');
+	popUpButtons.html('');
 
 	//boutons
 	var buttons = [
-			document.createElement('input'),
-			document.createElement('input')
+			//classes btn-primary and btn-default will be inverted in @func chooseMyFiles()
+			$('<input type="button" class="btn btn-default" value="Mes fichiers">'),
+			$('<input type="button" class="btn btn-primary" value="Importer">')
 		],
-		text = [
-			'Mes fichiers',
-			'Importer'
-		];
+		div = $('<div class="btn-group"></div>');
 
-	buttons[0].value = text[0];
-	buttons[1].value = text[1];
-	buttons[0].type  = 'button';
-	buttons[1].type  = 'button';
-
-	buttons[0].addEventListener('click', chooseMyFiles);
+	buttons[0].on('click.Xif', chooseMyFiles);
 
 	// formulaire d'upload
-	buttons[1].addEventListener('click', function() {
-		/*var xhr = new XMLHttpRequest();
-		xhr.open('GET', baseURL.replace(/get$/, 'add'), false);
-		xhr.send(null);*/
+	buttons[1].on('click.Xif', function() {
+		var place = $('#popUpModif');
+		place.html('');
+		$('#popUpButtons input').toggleClass('btn-primary btn-default');
 
-		var place = document.getElementById('popUpModif');
-		place.innerHTML = '';
-
-		/*if (xhr.status != 200) {
-			place.appendChild(document.createTextNode('Erreur ' + xhr.status + ' : ' + xhr.statusText));
-		} else {
-			place.innerHTML = xhr.responseText;
-		}*/
-
-		var iframe = document.createElement('iframe');
-		iframe.src = baseURL.replace(/get$/, 'add');
-		place.appendChild(iframe);
+		var iframe = $('<iframe></iframe>');
+		iframe.attr('src', baseURL.replace(/get$/, 'add'));
+		place.append(iframe);
 	});
 
-	popUpButtons.appendChild(buttons[0]);
-	popUpButtons.appendChild(buttons[1]);
+	div.append(buttons[0]).append(buttons[1]);
+	popUpButtons.append(div);
 
-	popUp.style.display = 'block';
+	popUp.modal('show');
 
 	console.log('Choix d\'un fichier');
 	chooseMyFiles();
 }
 
-function chooseMyFiles() {
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', baseURL + '/mine', false);
-	xhr.send(null);
-	var place = document.getElementById('popUpModif');
-	place.innerHTML = '';
-	if (xhr.status != 200) {
-		place.appendChild(document.createTextNode('Erreur ' + xhr.status + ' : ' + xhr.statusText));
-	} else {
-		var response = JSON.parse(xhr.responseText);
+function chooseMyFiles(reload) {
+	$('#popUpModif').html('');
+	if (typeof reload == "undefined")
+		$('#popUpButtons input').toggleClass('btn-primary btn-default');
 
-		var TRs = new Array();
-		for (var i = response.length - 1; i >= 0; i--) {
-			var TDs = [
-					document.createElement('td'),
-					document.createElement('td'),
-					document.createElement('td')
-				],
-				radio = document.createElement('input'),
-				link  = document.createElement('a'),
-				tr    = document.createElement('tr');
-			
-			radio.type  = 'radio';
-			radio.name  = 'file';
-			radio.value = response[i].id;
-			link.innerHTML = 'Supprimer';
-			(function(id, tr, place){
-				link.onclick = function() {
-					if (confirm('Toute suppression est définitive,\nVoulez vous supprimer ce son?')) {
-						xhr = new XMLHttpRequest();
-						xhr.open('GET', baseURL.replace(/get$/, 'remove/') + id);
-						xhr.addEventListener('readystatechange', function() {
-							if (xhr.readyState == XMLHttpRequest.DONE){
-								if (xhr.status != 200) {
+	$.ajax({
+		url: baseURL+'/mine',
+		type: 'GET',
+		dataType: 'json',
+		error: function() {
+			$('#popUpModif').append($('<p>Erreur '+xhr.status +' : '+xhr.statusText+'</p>'));
+		},
+		success: function(response) {
+			var TRs = new Array(),
+				place = $('#popUpModif');
+			for (var i = response.length - 1; i >= 0; i--) {
+				var TDs = [
+						$('<td></td>'),
+						$('<td id="file'+response[i].id+'">'+response[i].name+'</td>'),
+						$('<td></td>')
+					],
+					radio = $('<input type="radio" name="file" value="'+response[i].id+'">'),
+					link  = $('<button>Supprimer</button>'),
+					tr    = $('<tr></tr>');
+
+				(function(id, tr, place){
+					link.on('click.Xif', function() {
+						if (confirm('Toute suppression est définitive,\nVoulez vous supprimer ce son?')) {
+							$.ajax({
+								url: baseURL.replace(/get$/, 'remove/') + id,
+								dataType: 'text',
+								error: function(){
 									alert(
-										'Le fichier n\'a pas pu être supprimé.\n\nIl est peut-être employé par un autre projet.'
+										'Le fichier n\'a pas pu être supprimé.\n\nIl est sans-doute employé par un autre projet.'
 										);
-								} else {
-									place.getElementsByTagName('table')[0].removeChild(tr);
+								},
+								success: function(){
+									tr.remove();
+									chooseMyFiles(true);
 								}
-							}
-						});
-						xhr.send(null);
-					}
-				}
-			})(response[i].id, tr, place)
-			TDs[0].appendChild(radio);
-			TDs[1].innerHTML = response[i].name;
-			TDs[2].appendChild(link);
-			if (PROJECT.songs[NOW].file == response[i].id)
-				radio.checked = 'checked';
+							});
+						}
+					});
+				})(response[i].id, tr, place)
 
-			tr.appendChild(TDs[0]);
-			tr.appendChild(TDs[1]);
-			tr.appendChild(TDs[2]);
-			TRs.push(tr);
-		}
-		if (!response.length) {
-			var tr   = document.createElement('tr'),
-				td   = document.createElement('td'),
-				text = document.createTextNode('Vous n\'avez pas encore de fichiers');
-			tr.appendChild(td);
-			td.appendChild(text);
-			td.setAttribute('colspan', 2);
-			TRs.push(tr);
-		}
+				TDs[0].append(radio);
+				TDs[2].append(link);
+				if (PROJECT.songs[NOW].file == response[i].id)
+					radio.prop('checked', true);
 
-		var table = place.appendChild(document.createElement('table'));
-		table.innerHTML = '<tr><th></th><th>Titre</th></tr>';
-		for (var i = TRs.length - 1; i >= 0; i--) {
-			table.appendChild(TRs[i]);
+				tr.append(TDs[0]);
+				tr.append(TDs[1]);
+				tr.append(TDs[2]);
+				TRs.push(tr);
+			}
+			if (!response.length) {
+				var tr   = $('<tr><td colspan=2>Vous n\'avez pas encore de fichiers</td></tr>');
+				TRs.push(tr);
+			}
+
+			var table = $('<table class="table"></table>');
+			place.append(table)
+			table.html('<tr><th></th><th>Titre</th></tr>');
+			for (var i = TRs.length - 1; i >= 0; i--) {
+				table.append(TRs[i]);
+			}
 		}
-	}
+	});
 }
 
 function chooseTrans() {
@@ -333,133 +304,71 @@ function chooseTrans() {
 	}
 	editing = 'trans';
 
-	var popUp = document.getElementById('popUp'),
-		frame = document.getElementById('popUpModif'),
-		buttons = document.getElementById('popUpButtons');
+	var popUp = $('#popUp'),
+		frame = $('#popUpModif'),
+		buttons = $('#popUpButtons');
 
 	//vidange du pop-up
-	frame.innerHTML = '';
-	buttons.innerHTML = '';
+	frame.html('');
+	buttons.html('');
 
 	//création des éléments
 	var 
 		selects = [
-			document.createElement('select'),
-			document.createElement('select'),
-			document.createElement('select')
+			$('<select name="type" class="form-control"><option value="#">Random</option><option value="&">Restart</option><option value="O">Repeat</option><option value="1">One</option></select>'),
+			$('<select name="trans1" class="form-control"><option value="f">Full</option><option value="l">Longfadeout</option><option value="s">Fadeout</option><option value="q">Quickfadeout</option><option value="r">Raw</option><option value="">Aucune</option></select>'),
+			$('<select name="trans2" class="form-control"><option value="f">Full</option><option value="l">Longfadeout</option><option value="s">Fadeout</option><option value="q">Quickfadeout</option><option value="r">Raw</option></select>')
 		],
 		labels = [
-			document.createElement('label'),
-			document.createElement('label'),
-			document.createElement('label'),
-			document.createElement('label'),
-			document.createElement('label')
+			$('<label>Type </label>'),
+			$('<label>Transition 1 </label>'),
+			$('<label>Autonext 1 </label>'),
+			$('<label>Transition 2 </label>'),
+			$('<label>Autonext 2 </label>')
 		]
-		types = [
-			document.createElement('option'),
-			document.createElement('option'),
-			document.createElement('option'),
-			document.createElement('option')
-		],
-		trans1 = [
-			document.createElement('option'),
-			document.createElement('option'),
-			document.createElement('option'),
-			document.createElement('option'),
-			document.createElement('option'),
-			document.createElement('option')
-		],
-		trans2 = [
-			document.createElement('option'),
-			document.createElement('option'),
-			document.createElement('option'),
-			document.createElement('option'),
-			document.createElement('option')
-		],
 		auto = [
-			document.createElement('input'),
-			document.createElement('input')
-		]
-	//conf par défaut
-	for (var i = types.length - 1; i >= 0; i--) {
-		selects[0].appendChild(types[i]);
-	}
-	for (var i = trans1.length - 1; i >= 0; i--) {
-		selects[1].appendChild(trans1[i]);
-	}
-	for (var i = trans2.length - 1; i >= 0; i--) {
-		selects[2].appendChild(trans2[i]);
-	}
-	types[0].innerHTML = 'Random';
-	types[1].innerHTML = 'Restart';
-	types[2].innerHTML = 'Repeat';
-	types[3].innerHTML = 'One';
-	trans1[0].innerHTML = trans2[0].innerHTML = 'Full';
-	trans1[1].innerHTML = trans2[1].innerHTML = 'Longfadeout';
-	trans1[2].innerHTML = trans2[2].innerHTML = 'Fadeout';
-	trans1[3].innerHTML = trans2[3].innerHTML = 'Quickfadeout';
-	trans1[4].innerHTML = trans2[4].innerHTML = 'Raw';
-	trans1[5].innerHTML = 'Aucune';
-	types[0].value = '#';
-	types[1].value = '&';
-	types[2].value = 'O';
-	types[3].value = '1';
-	trans1[0].value = trans2[0].value = 'f';
-	trans1[1].value = trans2[1].value = 'l';
-	trans1[2].value = trans2[2].value = 's';
-	trans1[3].value = trans2[3].value = 'q';
-	trans1[4].value = trans2[4].value = 'r';
-	trans1[5].value = '';
-	selects[0].name = 'type';
-	selects[1].name = 'trans1';
-	selects[2].name = 'trans2';
-	auto[0].type = auto[1].type = 'checkbox';
-	auto[0].id = 'auto1';
-	auto[1].id = 'auto2'
-	labels[0].innerHTML = 'Type ';
-	labels[1].innerHTML = 'Transition 1 ';
-	labels[2].innerHTML = 'Autonext 1 ';
-	labels[3].innerHTML = 'Transition 2 ';
-	labels[4].innerHTML = 'Autonext 2 ';
+			$('<input type="checkbox" id="auto1">'),
+			$('<input type="checkbox" id="auto2">')
+		];
+
+	//insertion
+		frame.append(labels[0]);
+		frame.append(selects[0]);
+		frame.append($('<br>'));
+		frame.append(labels[1]);
+		frame.append(selects[1]);
+		frame.append($('<br>'));
+		frame.append(labels[2]);
+		frame.append(auto[0]);
+		frame.append($('<br>'));
+		frame.append(labels[3]);
+		frame.append(selects[2]);
+		frame.append($('<br>'));
+		frame.append(labels[4]);
+		frame.append(auto[1]);
 
 	//actuel
 	var SONG = PROJECT.songs[NOW];
-		 if (SONG.trans[0] == '1') types[3].selected = true;
-	else if (SONG.trans[0] == '&') types[1].selected = true;
-	else if (SONG.trans[0] == '#') types[0].selected = true;
-	else if (SONG.trans[0] == 'O') types[2].selected = true;
-		 if (~SONG.trans[1].indexOf('q')) trans1[3].selected = true;
-	else if (~SONG.trans[1].indexOf('s')) trans1[2].selected = true;
-	else if (~SONG.trans[1].indexOf('l')) trans1[1].selected = true;
-	else if (~SONG.trans[1].indexOf('f')) trans1[0].selected = true;
-	else if (~SONG.trans[1].indexOf('r')) trans1[4].selected = true;
-	else if (SONG.trans[1].length == 0) trans1[5].selected = true;
-		 if (~SONG.trans[2].indexOf('q')) trans2[3].selected = true;
-	else if (~SONG.trans[2].indexOf('s')) trans2[2].selected = true;
-	else if (~SONG.trans[2].indexOf('l')) trans2[1].selected = true;
-	else if (~SONG.trans[2].indexOf('f')) trans2[0].selected = true;
-	else if (~SONG.trans[2].indexOf('r')) trans2[4].selected = true;
-	if (~SONG.trans[1].indexOf('n')) auto[0].checked = true;
-	if (~SONG.trans[2].indexOf('n')) auto[1].checked = true;
-
-	//insertion
-	frame.appendChild(labels[0]);
-	frame.appendChild(selects[0]);
-	frame.appendChild(document.createElement('br'));
-	frame.appendChild(labels[1]);
-	frame.appendChild(selects[1]);
-	frame.appendChild(document.createElement('br'));
-	frame.appendChild(labels[2]);
-	frame.appendChild(auto[0]);
-	frame.appendChild(document.createElement('br'));
-	frame.appendChild(labels[3]);
-	frame.appendChild(selects[2]);
-	frame.appendChild(document.createElement('br'));
-	frame.appendChild(labels[4]);
-	frame.appendChild(auto[1]);
+		 if (SONG.trans[0] == '1') $('[name="type"]>[value="1"]').prop('selected', true);
+	else if (SONG.trans[0] == '&') $('[name="type"]>[value="&"]').prop('selected', true);
+	else if (SONG.trans[0] == '#') $('[name="type"]>[value="#"]').prop('selected', true);
+	else if (SONG.trans[0] == 'O') $('[name="type"]>[value="O"]').prop('selected', true);
+		 if (~SONG.trans[1].indexOf('q')) $('[name="trans1"]>[value="q"]').prop('selected', true)
+	else if (~SONG.trans[1].indexOf('s')) $('[name="trans1"]>[value="s"]').prop('selected', true)
+	else if (~SONG.trans[1].indexOf('l')) $('[name="trans1"]>[value="l"]').prop('selected', true)
+	else if (~SONG.trans[1].indexOf('f')) $('[name="trans1"]>[value="f"]').prop('selected', true)
+	else if (~SONG.trans[1].indexOf('r')) $('[name="trans1"]>[value="r"]').prop('selected', true)
+	else if (SONG.trans[1].length == 0)   $('[name="trans1"]>[value=""]').prop('selected', true)
+		 if (~SONG.trans[2].indexOf('q')) $('[name="trans2"]>[value="q"]').prop('selected', true)
+	else if (~SONG.trans[2].indexOf('s')) $('[name="trans2"]>[value="s"]').prop('selected', true)
+	else if (~SONG.trans[2].indexOf('l')) $('[name="trans2"]>[value="l"]').prop('selected', true)
+	else if (~SONG.trans[2].indexOf('f')) $('[name="trans2"]>[value="f"]').prop('selected', true)
+	else if (~SONG.trans[2].indexOf('r')) $('[name="trans2"]>[value="r"]').prop('selected', true)
+	if (~SONG.trans[1].indexOf('n')) $('#auto1').prop('checked', true);
+	if (~SONG.trans[2].indexOf('n')) $('#auto2').prop('checked', true);
 
 	//affichage
-	popUp.style.display = 'block';
+	popUp.modal('show');
 
 	console.log('Choix d\'une transition');
 }
@@ -468,176 +377,193 @@ function endEdit() {
 	if (editing == false) return;
 	switch (editing) {
 		case 'trans':
-			document.getElementById('popUp').style.display = 'none';
+			$('#popUp').modal('hide');
 
-			var type = document.querySelector('select[name="type"]').querySelector('option:checked').value,
-				trans1 = document.querySelector('select[name="trans1"]').querySelector('option:checked').value,
-				trans2 = document.querySelector('select[name="trans2"]').querySelector('option:checked').value;
-			if (document.getElementById('auto1').checked) trans1 += 'n';
-			if (document.getElementById('auto2').checked) trans2 += 'n';
+			var type = $('select[name="type"]>option:selected').val(),
+				trans1 = $('select[name="trans1"]>option:selected').val(),
+				trans2 = $('select[name="trans2"]>option:selected').val();
+			if ($('#auto1').prop('checked')) trans1 += 'n';
+			if ($('#auto2').prop('checked')) trans2 += 'n';
 			
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', document.location.href);
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhr.addEventListener('readystatechange', function() {
-				if (xhr.readyState == XMLHttpRequest.DONE && xhr.status != 202) {
-					alert('La modification de transition a échoué suite à une erreur ' + xhr.status + ': ' + xhr.responseText);
+			$.ajax({
+				url: document.location.href,
+				type: 'POST',
+				data: {
+					lineId: PROJECT.songs[NOW].id,
+					trans1: trans1,
+					trans2: trans2,
+					type: type
+				},
+				dataType: 'text',
+				error: function(){
+					alert('La modification de transition a échoué suite à une erreur. '/* + xhr.status + ': ' + xhr.responseText*/);
 				}
 			});
-			xhr.send('lineId=' + PROJECT.songs[NOW].id + '&trans1=' + trans1 + '&trans2=' + trans2 + '&type=' + type);
 
 			PROJECT.songs[NOW].trans[0] = type;
 			PROJECT.songs[NOW].trans[1] = trans1;
 			PROJECT.songs[NOW].trans[2] = trans2;
 
-			document.getElementById('choosedTrans').innerHTML = songtype_to_str(PROJECT.songs[NOW]);
-			document.getElementById('songList').getElementsByTagName('span')[NOW].innerHTML = '(' + songtype_to_str(PROJECT.songs[NOW]) + ')';
+			$('#choosedTrans').html(songtype_to_str(PROJECT.songs[NOW]));
+			$($('#songList span')[NOW]).html('(' + songtype_to_str(PROJECT.songs[NOW]) + ')');
 			break;
 
 		case 'file':
-			document.getElementById('popUp').style.display = 'none';
+			$('#popUp').modal('hide');
 			
-			var selected = document.getElementById('popUpModif').querySelector('input[type="radio"]:checked');
-			var selectedId = selected.value;
+			var selected = $('#popUpModif input[type="radio"]:checked');
+			var selectedId = selected.val();
 
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', document.location.href);
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhr.addEventListener('readystatechange', function() {
-				if (xhr.readyState == XMLHttpRequest.DONE && xhr.status != 202) {
-					alert('La modification de fichier a échoué suite à une erreur ' + xhr.status + ': ' + xhr.responseText);
+			$.ajax({
+				url: document.location.href,
+				type: 'POST',
+				data: {
+					lineId: PROJECT.songs[NOW].id,
+					file: selectedId
+				},
+				dataType: 'text',
+				error: function(){
+					alert('La modification de fichier a échoué suite à une erreur. '/* + xhr.status + ': ' + xhr.responseText*/);
 				}
 			});
-			xhr.send('lineId=' + PROJECT.songs[NOW].id + '&file=' + selectedId);
 
 			PROJECT.songs[NOW].file = selectedId;
-			document.
-				getElementById('choosedFile').
-				innerHTML = selected.
-					parentNode.
-					nextElementSibling.
-					innerHTML;
+			$('#choosedFile').html($('#file'+selectedId).text());
 			break;
 
 		case 'songName':
-			var element = document.getElementById('songName'),
-				contenu = element.firstElementChild.value;
+			var element = $('#songName'),
+				input   = $('#songName input'),
+				contenu = input.val();
 
 			// évite les titres vides
 			if (contenu.length == 0) {
-				element.firstElementChild.addEventListener('blur', endEdit);
+				input.on('blur.Xif', endEdit);
 				alert('Le titre ne peut pas être vide.');
-				element.firstElementChild.select();
+				input.focus();
 				return;
 			}
 
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', document.location.href);
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhr.addEventListener('readystatechange', function() {
-				if (xhr.readyState == XMLHttpRequest.DONE && xhr.status != 202) {
-					alert('La modification a échoué suite à une erreur ' + xhr.status + ': ' + xhr.responseText);
+			$.ajax({
+				url: document.location.href,
+				type: 'POST',
+				data: {
+					lineId: PROJECT.songs[NOW].id,
+					songName: contenu
+				},
+				dataType: 'text',
+				error: function() {
+					alert('La modification a échoué suite à une erreur. '/* +xhr.status+': '+xhr.responseText */);
 				}
 			});
-			xhr.send('lineId=' + PROJECT.songs[NOW].id + '&songName=' + contenu);
 
-			document.getElementById('songList').getElementsByTagName('song')[NOW].innerHTML = contenu;
+			$($('#songList song')[NOW]).html(contenu);
 			PROJECT.songs[NOW].name = contenu;
-			element.innerHTML = contenu;
+			element.html(contenu);
 			break;
 
 		case 'songDescr':
-			var element = document.getElementById('songDescr'),
-				contenu = element.firstElementChild.value;
+			var element = $('#songDescr'),
+				input   = $('#songDescr input')
+				contenu = input.val();
 
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', document.location.href);
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhr.addEventListener('readystatechange', function() {
-				if (xhr.readyState == XMLHttpRequest.DONE && xhr.status != 202) {
-					alert('La modification a échoué suite à une erreur ' + xhr.status + ': ' + xhr.responseText);
+			$.ajax({
+				url: document.location.href,
+				type: 'POST',
+				data: {
+					lineId: PROJECT.songs[NOW].id,
+					songDescr: contenu
+				},
+				dataType: 'text',
+				error: function(){
+					alert('La modification a échoué suite à une erreur. '/* + xhr.status + ': ' + xhr.responseText*/);
 				}
 			});
-			xhr.send('lineId=' + PROJECT.songs[NOW].id + '&songDescr=' + contenu);
 
-			document.getElementById('songList').getElementsByTagName('descr')[NOW].innerHTML = contenu;
+			$($('#songList descr')[NOW]).html(contenu);
 			PROJECT.songs[NOW].descr = contenu;
 			if (contenu.length) {
-				element.innerHTML = contenu;
-				element.className = '';
+				element.html(contenu);
+				element.removeClass('help-block');
 			} else {
-				element.innerHTML = 'Pas de description';
-				element.className = 'no-descr'
+				element.html('Pas de description');
+				element.addClass('help-block');
 			}
 			break;
 
 		case 'songVol':
-			var element = document.getElementById('songVol'),
-				contenu = element.firstElementChild.value;
+			var element = $('#songVol'),
+				input   = $('#songVol input'),
+				contenu = input.val();
 
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', document.location.href);
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhr.addEventListener('readystatechange', function() {
-				if (xhr.readyState == XMLHttpRequest.DONE && xhr.status != 202) {
-					alert('La modification a échoué suite à une erreur ' + xhr.status + ': ' + xhr.responseText);
+			$.ajax({
+				url: document.location.href,
+				type: 'POST',
+				data: {
+					lineId: PROJECT.songs[NOW].id,
+					songVol: contenu
+				},
+				dataType: 'text',
+				error: function(){
+					alert('La modification a échoué suite à une erreur. '/* + xhr.status + ': ' + xhr.responseText*/);
 				}
 			});
-			xhr.send('lineId=' + PROJECT.songs[NOW].id + '&songVol=' + contenu);
 
 			PROJECT.songs[NOW].name = parseFloat(contenu, 10);
-			element.innerHTML = contenu;
+			element.html(contenu);
 			break;
 
 		case 'projTitle':
-			var element = document.getElementById('projTitle'),
-				contenu = element.firstElementChild.value;
+			var element = $('#projTitle'),
+				input   = $('#projTitle input'),
+				contenu = input.val();
 
 			// évite les titres vides
 			if (contenu.length == 0) {
-				element.firstElementChild.addEventListener('blur', endEdit);
+				input.on('blur.Xif', endEdit);
 				alert('Le titre ne peut pas être vide.');
-				element.firstElementChild.select();
+				input.focus();
 				return;
 			}
 
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', document.location.href);
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhr.addEventListener('readystatechange', function() {
-				if (xhr.readyState == XMLHttpRequest.DONE && xhr.status != 202) {
-					alert('La modification a échoué suite à une erreur ' + xhr.status + ': ' + xhr.responseText);
+			$.ajax({
+				url: document.location.href,
+				type: 'POST',
+				data: { projTitle: contenu },
+				dataType: 'text',
+				error: function(){
+					alert('La modification a échoué suite à une erreur. '/* + xhr.status + ': ' + xhr.responseText*/);
 				}
 			});
-			xhr.send('projTitle=' + contenu);
 
-			var title = document.getElementsByTagName('title')[0];
-			title.innerHTML = title.innerHTML.replace(/([\S\s]+?) –/, contenu + ' –');
+			var title = $('title:eq(0)');
+			title.html(title.html().replace(/^([\S\s]+?) –/, contenu + ' –'));
 			PROJECT.name = contenu;
-			element.innerHTML = contenu;
+			element.html(contenu);
 			break;
 
 		case 'projDescr':
-			var element = document.getElementById('projDescr'),
-				contenu = element.firstElementChild.value;
+			var element = $('#projDescr'),
+				input   = $('#projDescr input'),
+				contenu = input.val();
 
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', document.location.href);
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhr.addEventListener('readystatechange', function() {
-				if (xhr.readyState == XMLHttpRequest.DONE && xhr.status != 202) {
-					alert('La modification a échoué suite à une erreur ' + xhr.status + ': ' + xhr.responseText);
+			$.ajax({
+				url: document.location.href,
+				type: 'POST',
+				data: { projDescr: contenu },
+				dataType: 'text',
+				error: function(){
+					alert('La modification a échoué suite à une erreur. '/* + xhr.status + ': ' + xhr.responseText*/);
 				}
 			});
-			xhr.send('projDescr=' + contenu);
 
 			PROJECT.descr = contenu;
 			if (contenu.length) {
-				element.innerHTML = contenu;
-				element.className = '';
+				element.html(contenu);
+				element.removeClass('help-block');
 			} else {
-				element.innerHTML = 'Pas de description';
-				element.className = 'no-descr'
+				element.html('Pas de description');
+				element.addClass('help-block');
 			}
 			break;
 	}
@@ -651,29 +577,22 @@ function addSong() {
 		endEdit();
 	}
 
-	var xhr = new XMLHttpRequest();
+	var xhr = new XMLHttpRequest;
 	xhr.open('POST', document.location.href);
 	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhr.addEventListener('readystatechange', function(e) {
-		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 201/*HTTP_CREATED*/) {
+	xhr.addEventListener('readystatechange', function(event) {
+		if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
 			var response = JSON.parse(xhr.responseText);
 			PROJECT.songs.push(response);
 
-			var li = document.createElement('li'),
-				song = document.createElement('song'),
-				descr = document.createElement('descr'),
-				span = document.createElement('span');
-			song.innerHTML = response.name;
-			descr.innerHTML = ' '+response.descr;
-			span.innerHTML = ' ('+songtype_to_str(response)+')';
-			li.appendChild(song);
-			li.appendChild(descr);
-			li.appendChild(span);
+			var li = $('<li class="list-group-item"><song>'+response.name+'</song> <descr>'+response.descr+'</descr> <span>('+songtype_to_str(response)+')</span></li>');
+
 			load_song_listener(PROJECT.songs.length - 1, li);
-			document.getElementById('songList').appendChild(li);
+			$('#songList').append(li);
 			load_song(PROJECT.songs.length - 1);
-		} if (xhr.readyState == XMLHttpRequest.DONE && xhr.status != 201) {
-			alert('L\'ajout du son a échoué suite à une erreur ' + xhr.status + ': ' + xhr.responseText);
+		} else if (xhr.readyState === XMLHttpRequest.DONE && xhr.status != 200) {
+			console.error('Erreur lors de l\'ajout du son');
+			alert('Erreur lors de l\'ajout du son');
 		}
 	});
 	xhr.send('addSong=true');
@@ -685,49 +604,45 @@ function removeThisSong() {
 	if (editing) {
 		endEdit();
 	}
+
 	if (PROJECT.songs.length < 2) {
 		console.error('Attempted to remove the only song of this project');
 		alert('Vous ne pouvez pas retirer le seul son du projet!');
 		return;
 	}
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', document.location.href);
-	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhr.addEventListener('readystatechange', function(e) {
-		if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200/*HTTP_OK*/) {
-			var list = document.getElementById('songList');
-			list.removeChild(list.getElementsByTagName('li')[NOW]);
+	
+	$.ajax({
+		url: document.location.href,
+		type: 'POST',
+		data: 'removeSong='+PROJECT.songs[NOW].id,
+		dataType: 'text',
+		error: function(){
+			alert('La suppression du son a échoué suite à une erreur. '/* + xhr.status + ': ' + xhr.responseText*/);
+		},
+		success: function (){
+			$('#songList li:eq('+NOW+')').remove();
 			PROJECT.songs.splice(NOW, 1);
 			if (NOW != 0) {
 				load_song(NOW - 1);
 			} else {
 				load_song(0);
 			}
-			var LIs = list.getElementsByTagName('li');
-			for (var i = LIs.length - 1; i >= 0; i--) {
-				load_song_listener(i, LIs[i]);
-			}
-		} else if (xhr.readyState == XMLHttpRequest.DONE && xhr.status != 200) {
-			alert('La suppression du son a échoué suite à une erreur ' + xhr.status + ': ' + xhr.responseText);
+			load_song_listener();
 		}
 	});
-	xhr.send('removeSong=' + PROJECT.songs[NOW].id);
 	
 	console.log('Retrait du son n°' + PROJECT.songs[NOW].id);
 }
 
-(function() {
-	document.getElementById('fermerAffichage').addEventListener('click', function(event) {
-		if (confirm('Les modifications ne sont pas sauvegardées.\nVoulez vous vraiment quitter?')) {
-			document.getElementById('popUp').style.display = 'none';
-			editing = false;
-			console.log('Modifications annulées.');
-		}
+$(function() {
+	$('#popUp').on('hidden.bs.modal', function(event) {
+		editing = false;
+		console.log('Modifications annulées.');
 	});
-	window.onbeforeunload = function() {
+	$(window).on('beforeunload.Xif', function() {
 		if (editing) {
 			endEdit();
 			return '';
 		}
-	}
-})();
+	});
+});

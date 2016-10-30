@@ -32,7 +32,7 @@
 
 			<div id="div_lecture">
 				<div id="lecteur">
-					<audio controls id="player">
+					<audio controls id="player" preload="auto">
 						<span title="Il ne supporte pas le HTML5">
 							Votre navigateur n'est pas à jour.
 						</span><br/>
@@ -74,7 +74,7 @@
 	<script src="{{ asset('bundles/xifsoundorganiser/playPage.js')}}"></script>
 	<script>
 		PROJECT = {{ project|json_encode(128)|raw }};
-		baseURL = "{{ baseGetFileURL|raw }}";
+		baseURL = "{{ path('xif_file_get_base')|raw }}";
 		open_proj();
 	</script>
 </body>

@@ -27,7 +27,12 @@ class ActusType extends AbstractType {
 			->add(
 				'submit',
 				SubmitType::class,
-				array('label' => 'Publier')
+				array(
+					'label' => 'Publier',
+					'attr'  => array(
+						'class' => 'btn btn-primary'
+						),
+					)
 				)
 			;
 	}

@@ -3,8 +3,12 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% block fos_user_content %}
-	<h2>Réinitialiser le mot de passe</h2>
-	<p>
-		{{ 'resetting.check_email'|trans({'%email%': email}) }}
-	</p>
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2">
+			<h2>Réinitialiser mon mot de passe</h2>
+			<p>
+				{{ 'resetting.check_email'|trans({'%email%': email}) }}
+			</p>
+		</div>
+	</div>
 {% endblock %}

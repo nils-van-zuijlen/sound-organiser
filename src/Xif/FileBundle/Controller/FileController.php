@@ -30,13 +30,14 @@ class FileController extends Controller {
 	 * Récupérer un fichier enregistré en BDD
 	 * 
 	 * @param  integer $id      Id du fichier demandé
+	 * @param  boolean $admin   Mode administrateur
 	 * @return Response         Fichier extrait
 	 */
 	public function getFileAction($id, $admin)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
+		$em = $this->getDoctrine()->getManager();
 
-		if (null === $fileObject = $entityManager
+		if (null === $fileObject = $em
 				->getRepository('XifFileBundle:File')
 				->find($id)
 				) {
@@ -46,8 +47,6 @@ class FileController extends Controller {
 		//Is owned by querier
 		if (
 			!$this
-				->get('security.token_storage')
-				->getToken()
 				->getUser()
 				->getId()
 				== $fileObject
@@ -79,23 +78,23 @@ class FileController extends Controller {
 	 */
 	public function addFileAction(Request $request)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-		$file          = new File(
-			$this->get('security.token_storage')->getToken()->getUser()
+		$em = $this->getDoctrine()->getManager();
+		$file = new File(
+			$this->getUser()
 			);
 
-		$form          = $this
-							->get('form.factory')
-							->create(FileType::class, $file);
+		$form = $this
+			->get('form.factory')
+			->create(FileType::class, $file);
 
 		if (
 			$request->isMethod('POST') 
 			&& $form->handleRequest($request)->isValid()
 			) {
 			
-			$entityManager = $this->getDoctrine()->getManager();
-			$entityManager->persist($file);
-			$entityManager->flush();
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($file);
+			$em->flush();
 
 			return new Response('<!DOCTYPE html><html><body><script>window.top.window.chooseMyFiles();</script></body></html>', 200);
 		}
@@ -110,22 +109,21 @@ class FileController extends Controller {
 
 	public function removeFileAction($id, $admin)
 	{
-		$entityManager = $this
-			->getDoctrine()
-			->getManager();
-		if(null == $file = $entityManager->getRepository('XifFileBundle:File')->find($id)) {
+		$em = $this->getDoctrine()->getManager();
+
+		if(null == $file = $em->getRepository('XifFileBundle:File')->find($id)) {
 			throw new NotFoundHttpException('Fichier inexistant');
 		}
 
 		// utilisateur === propriétaire
-		if (!$this->get('security.token_storage')->getToken()->getUser()->getId()== $file->getOwner()->getId()
+		if (!$this->getUser()->getId()== $file->getOwner()->getId()
 			|| ($admin && !$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN'))) {
 			throw new AccessDeniedException('Vous n\'êtes pas le propriétaire du fichier.');
 		}
 
 		// suppression du fichier
-		$entityManager->remove($file);
-		$entityManager->flush();
+		$em->remove($file);
+		$em->flush();
 
 		if ($admin && $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
 			return $this->redirectToRoute('xif_user_viewfiles');
@@ -145,10 +143,9 @@ class FileController extends Controller {
 			throw new AccessDeniedException('Veuillez vous connecter en tant qu\'administrateur.');
 		}
 
-		$entityManager = $this
+		$files = $this
 			->getDoctrine()
-			->getManager();
-		$files = $entityManager
+			->getManager()
 			->getRepository('XifFileBundle:File')
 			->findAll();
 
@@ -162,16 +159,12 @@ class FileController extends Controller {
 
 	public function getMineAction(Request $request)
 	{
-		$entityManager = $this
+		$files = $this
 			->getDoctrine()
-			->getManager();
-		$files = $entityManager
+			->getManager()
 			->getRepository('XifFileBundle:File')
 			->findByOwner(
-				$this
-					->get('security.token_storage')
-					->getToken()
-					->getUser()
+				$this->getUser()
 				);
 
 		$filesArray = array();
@@ -183,5 +176,13 @@ class FileController extends Controller {
 		}
 
 		return new JsonResponse($filesArray);
+	}
+
+	public function getNameAction($id)
+	{
+		$file = $this->getDoctrine()->getManager()->getRepository('XifFileBundle:File')->find($id);
+		if ($file === null)
+			throw $this->createNotFoundException('The file of id "'.$id.'" does not exist in database.');
+		return new Response($file->getOriginalName());
 	}
 }

@@ -28,3 +28,13 @@ xif_file_getmine:
     defaults:
         _controller: XifFileBundle:File:getMine
     methods: GET
+
+xif_file_get_base: #this route is used only to genarate others
+    path: /get
+    methods: FLOP
+
+xif_file_get_name:
+    path: /get/{id}/name
+    defaults:
+        _controller: XifFileBundle:File:getName
+    methods: GET

@@ -12,11 +12,11 @@ xif_soundorganiser_makeprojectpage:
         _controller: XifSoundOrganiserBundle:SoundOrganiser:new
     methods: GET
 
-xif_soundorganiser_downloadpage:
-    path:    /download_offline
-    defaults:
-        _controller: XifSoundOrganiserBundle:SoundOrganiser:index
-    methods: GET
+#xif_soundorganiser_downloadpage:
+#    path:    /download_offline
+#    defaults:
+#        _controller: XifSoundOrganiserBundle:SoundOrganiser:index
+#    methods: GET
 
 xif_soundorganiser_playpage:
     path:    /{id}/play.{admin}
@@ -40,6 +40,8 @@ xif_soundorganiser_editajax:
     path:    /{projId}
     defaults:
         _controller: XifSoundOrganiserBundle:SoundOrganiser:editAjax
+    requirements:
+        projId: \d*
     methods: POST
 
 xif_soundorganiser_delete:
