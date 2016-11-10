@@ -17,7 +17,7 @@ use Xif\UserBundle\Entity\User;
  */
 class File
 {
-	const UPLOAD_ROOT_DIR = '/var/www/html/SoundOrganiser/src/Xif/FileBundle/Uploads/';
+	const UPLOAD_ROOT_DIR = __DIR__.'/../Uploads/';
 
 	/**
 	 * @var int
