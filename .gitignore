@@ -15,5 +15,5 @@
 /vendor/
 /web/bundles/
 /SoundOrganiser.sublime-workspace
+web/bootstrap/docs/*
 /src/Xif/FileBundle/Uploads/*
-/web/bootstrap/docs/*
