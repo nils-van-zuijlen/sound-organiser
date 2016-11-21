@@ -66,7 +66,7 @@ class ContactModel
 		return $this;
 	}
 
-	public function done($mail)
+	public function done(\Swift_Message $mail)
 	{
 		$mail->setSubject('Contact – '.$this->subject);
 		$mail->setReplyTo($this->senderMail, $this->senderName);
