@@ -1,7 +1,7 @@
 <?php
-// src/Xif/CoreBundle/Form/ContactType.php
+// src/Xif/CoreBundle/Form/Type/ContactType.php
 
-namespace Xif\CoreBundle\Form;
+namespace Xif\CoreBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
