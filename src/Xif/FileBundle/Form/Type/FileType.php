@@ -1,7 +1,7 @@
 <?php
-// src/Xif/FileBundle/Form/FileType.php
+// src/Xif/FileBundle/Form/Type/FileType.php
 
-namespace Xif\FileBundle\Form;
+namespace Xif\FileBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType as BaseFileType;

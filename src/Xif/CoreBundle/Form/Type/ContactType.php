@@ -1,35 +1,61 @@
 <?php
-// src/Xif/UserBundle/Form/MailType.php
+// src/Xif/CoreBundle/Form/Type/ContactType.php
 
-namespace Xif\UserBundle\Form;
+namespace Xif\CoreBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MailType extends AbstractType {
+class ContactType extends AbstractType {
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder
 			->add(
-				'subject',
-				TextType::class
+				'senderName',
+				TextType::class,
+				array(
+					'attr' => array(
+						'minlength' => 3,
+						),
+					)
 				)
 			->add(
-				'mailContent',
-				TextareaType::class
+				'senderMail',
+				EmailType::class
+				)
+			->add(
+				'subject',
+				TextType::class,
+				array(
+					'attr' => array(
+						'minlength' => 3,
+						'maxlength' => 255,
+						),
+					)
+				)
+			->add(
+				'body',
+				TextareaType::class,
+				array(
+					'attr' => array(
+						'minlength' => 10,
+						),
+					)
 				)
 			->add(
 				'send',
 				SubmitType::class,
 				array(
-					'attr' => array(
-						'class' => 'btn btn-primary'
+					'label' => 'Envoyer',
+					'attr'  => array(
+						'class' => 'btn btn-primary',
 						),
 					)
 				)
@@ -41,7 +67,7 @@ class MailType extends AbstractType {
 		$resolver
 			->setDefaults(
 				array(
-					'data_class' => 'Xif\UserBundle\FormModels\Mail'
+					'data_class' => 'Xif\CoreBundle\FormModels\ContactModel'
 					)
 				);
 		}

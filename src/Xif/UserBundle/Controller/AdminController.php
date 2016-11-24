@@ -7,11 +7,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Xif\UserBundle\FormModels\Promote;
-use Xif\UserBundle\Form\PromoteType;
+use Xif\UserBundle\Form\Type\PromoteType;
 use Xif\UserBundle\FormModels\Mail;
-use Xif\UserBundle\Form\MailType;
+use Xif\UserBundle\Form\Type\MailType;
 use Xif\CoreBundle\Entity\Actus;
-use Xif\CoreBundle\Form\ActusType;
+use Xif\CoreBundle\Form\Type\ActusType;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class AdminController extends Controller
