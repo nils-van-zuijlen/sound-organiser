@@ -19,7 +19,7 @@ use Xif\FileBundle\Entity\File;
 use Xif\UserBundle\Entity\User;
 use Xif\SoundOrganiserBundle\Entity\Project;
 // classes formulaires du bundle
-use Xif\FileBundle\Form\FileType;
+use Xif\FileBundle\Form\Type\FileType;
 
 /**
 * Gestion des fichiers de son
