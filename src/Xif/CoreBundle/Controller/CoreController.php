@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Xif\CoreBundle\FormModels\ContactModel;
-use Xif\CoreBundle\Form\ContactType;
+use Xif\CoreBundle\Form\Type\ContactType;
 
 /**
  * Controlleur du CoreBundle
