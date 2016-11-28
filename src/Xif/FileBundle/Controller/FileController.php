@@ -111,7 +111,7 @@ class FileController extends Controller {
 	{
 		$em = $this->getDoctrine()->getManager();
 
-		if(null == $file = $em->getRepository('XifFileBundle:File')->find($id)) {
+		if(null === $file = $em->getRepository('XifFileBundle:File')->find($id)) {
 			throw new NotFoundHttpException('Fichier inexistant');
 		}
 

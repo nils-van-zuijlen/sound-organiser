@@ -47,7 +47,7 @@ class AdminController extends Controller
 			->getRepository('XifUserBundle:User')
 			->find($id);
 
-		if ($user == null) {
+		if ($user === null) {
 			$request->getSession()->getFlashBag()->add('info', 'Cet utilisateur n\'existe pas');
 			return $this->redirectToRoute('xif_user_viewusers');
 		}
@@ -90,7 +90,7 @@ class AdminController extends Controller
 			->getRepository('XifUserBundle:User')
 			->find($id);
 
-		if ($user == null) {
+		if ($user === null) {
 			$request->getSession()->getFlashBag()->add('info', 'Cet utilisateur n\'existe pas');
 			return $this->redirectToRoute('xif_user_viewusers');
 		}
@@ -113,7 +113,7 @@ class AdminController extends Controller
 			->getRepository('XifUserBundle:User')
 			->find($id);
 
-		if ($user == null) {
+		if ($user === null) {
 			$request->getSession()->getFlashBag()->add('info', 'Cet utilisateur n\'existe pas');
 			return $this->redirectToRoute('xif_user_viewusers');
 		}
@@ -141,7 +141,7 @@ class AdminController extends Controller
 			->getRepository('XifUserBundle:User')
 			->find($id);
 
-		if ($user == null) {
+		if ($user === null) {
 			$request->getSession()->getFlashBag()->add('info', 'Cet utilisateur n\'existe pas');
 			return $this->redirectToRoute('xif_user_viewusers');
 		}
