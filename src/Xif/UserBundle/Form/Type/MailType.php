@@ -1,7 +1,7 @@
 <?php
-// src/Xif/CoreBundle/Form/ActusType.php
+// src/Xif/UserBundle/Form/Type/MailType.php
 
-namespace Xif\CoreBundle\Form;
+namespace Xif\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -12,24 +12,23 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ActusType extends AbstractType {
+class MailType extends AbstractType {
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder
 			->add(
-				'titre',
+				'subject',
 				TextType::class
 				)
 			->add(
-				'contenu',
+				'mailContent',
 				TextareaType::class
 				)
 			->add(
-				'submit',
+				'send',
 				SubmitType::class,
 				array(
-					'label' => 'Publier',
-					'attr'  => array(
+					'attr' => array(
 						'class' => 'btn btn-primary'
 						),
 					)
@@ -42,7 +41,7 @@ class ActusType extends AbstractType {
 		$resolver
 			->setDefaults(
 				array(
-					'data_class' => 'Xif\CoreBundle\Entity\Actus'
+					'data_class' => 'Xif\UserBundle\FormModels\Mail'
 					)
 				);
 		}

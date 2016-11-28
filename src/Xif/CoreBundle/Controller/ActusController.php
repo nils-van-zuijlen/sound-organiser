@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Xif\CoreBundle\Entity\Actus;
-use Xif\CoreBundle\Form\ActusType;
+use Xif\CoreBundle\Form\Type\ActusType;
 
 class ActusController extends Controller
 {

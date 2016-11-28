@@ -1,7 +1,7 @@
 <?php
-// src/Xif/UserBundle/Form/PromoteType.php
+// src/Xif/UserBundle/Form/Type/PromoteType.php
 
-namespace Xif\UserBundle\Form;
+namespace Xif\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
