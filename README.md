@@ -33,4 +33,3 @@ php bin/console doctrine:schema:update
 * `var` folder must be with editable and readable by your server user
 * `src/Xif/FileBundle/Uploads` folder must be with editable and readable by your server user too
 * your server must be able to read .htaccess files and to do [URL Rewriting](http://httpd.apache.org/docs/2.0/misc/rewriteguide.html)
-
