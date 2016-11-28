@@ -374,7 +374,7 @@ function chooseTrans() {
 }
 
 function endEdit() {
-	if (editing == false) return;
+	if (editing === false) return;
 	switch (editing) {
 		case 'trans':
 			$('#popUp').modal('hide');
