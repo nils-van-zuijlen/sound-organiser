@@ -2,6 +2,7 @@
     "name": "nils/sound-organiser",
     "license": "proprietary",
     "type": "project",
+    "description": "SoundOrganiser est une solution pour la diffusion de musique/sons/bruitages lors de spectacles.",
     "autoload": {
         "psr-4": {
             "": "src/"
