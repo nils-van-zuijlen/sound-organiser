@@ -8,8 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Xif\SoundOrganiserBundle\Entity\Project;
 use Xif\SoundOrganiserBundle\Entity\SongLine;
-use Xif\UserBundle\Entity\User;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
 
 /**
