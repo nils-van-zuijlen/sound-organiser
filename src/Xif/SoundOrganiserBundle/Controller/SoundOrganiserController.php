@@ -25,7 +25,6 @@ class SoundOrganiserController extends Controller {
 	 */
 	public function indexAction()
 	{
-		$entityManager = $this->getDoctrine()->getManager();
 		$user = $this->get('security.token_storage')->getToken()->getUser();
 
 		$projects = $user->getProjects();
