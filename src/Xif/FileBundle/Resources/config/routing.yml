@@ -1,35 +1,36 @@
 xif_file_get:
-    path:     /get/{id}.{admin}
+    path: /get/{id}.{admin}
     defaults:
         _controller: XifFileBundle:File:getFile
-        admin:       false
+        admin: false
     requirements:
-        id:    \d*
+        id: \d*
         admin: true|false
     methods: GET|HEAD
 
 xif_file_add:
-    path:     /add
+    path: /add
     defaults:
         _controller: XifFileBundle:File:addFile
     methods: POST|GET
 
 xif_file_remove:
-    path:     /remove/{id}.{admin}
+    path: /remove/{id}.{admin}
     defaults:
         _controller: XifFileBundle:File:removeFile
-        admin:       false
+        admin: false
     requirements:
+        id: \d*
         admin: true|false
     methods: GET
 
 xif_file_getmine:
-    path:     /get/mine
+    path: /get/mine
     defaults:
         _controller: XifFileBundle:File:getMine
     methods: GET
 
-xif_file_get_base: #this route is used only to genarate others
+xif_file_get_base: #this route is used only to generate others
     path: /get
     methods: FLOP
 
@@ -37,4 +38,14 @@ xif_file_get_name:
     path: /get/{id}/name
     defaults:
         _controller: XifFileBundle:File:getName
+    requirements:
+        id: \d*
+    methods: GET
+
+xif_file_audio_sources:
+    path: /get/audio/{id}
+    defaults:
+        _controller: XifFileBundle:File:audioSources
+    requirements:
+        id: \d*
     methods: GET

@@ -22,7 +22,7 @@ class FileType extends AbstractType {
 		$resolver
 			->setDefaults(
 				array(
-					'data_class' => 'Xif\FileBundle\Entity\File'
+					'data_class' => 'Xif\FileBundle\Entity\MultipleFile'
 					)
 				);
 		}

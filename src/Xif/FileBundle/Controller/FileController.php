@@ -7,14 +7,17 @@ namespace Xif\FileBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // composants de requète / réponse HTTP
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 // gestion de la sécurité
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 // classes ORM du bundle
 use Xif\FileBundle\Entity\File;
+use Xif\FileBundle\Entity\MultipleFile;
 // classes ORM de bundles externes
 use Xif\UserBundle\Entity\User;
 use Xif\SoundOrganiserBundle\Entity\Project;
@@ -39,10 +42,12 @@ class FileController extends Controller {
 
 		if (null === $fileObject = $em
 				->getRepository('XifFileBundle:File')
-				->find($id)
+				->getWithGroupById($id)
 				) {
-			throw new NotFoundHttpException('Fichier inexistant');	
+			throw $this->createNotFoundException('Fichier inexistant en BDD');	
 		}
+		if (!file_exists($fileObject->getLocation()))
+			throw $this->createNotFoundException('Fichier inexistant dans le système de fichiers');
 
 		//Is owned by querier
 		if (
@@ -50,23 +55,24 @@ class FileController extends Controller {
 				->getUser()
 				->getId()
 				== $fileObject
+					->getGroup()
 					->getOwner()
 					->getId()
 			&& !$admin && !$this
 				->get('security.authorization_checker')
 				->isGranted('ROLE_ADMIN')
 					) {
-			throw new AccessDeniedException('Vous n\'êtes pas le propriétaire du fichier');
+			throw $this->createAccessDeniedException('Vous n\'êtes pas le propriétaire du fichier');
 		}
 
-		$response = new Response();
-		$response->setContent(
+		$response = new BinaryFileResponse($fileObject->getLocation());
+		/*$response->setContent(
 			file_get_contents(
 				$fileObject->getLocation()
 				)
 			);
-		$response->headers->set('Content-Type', $fileObject->getMimeType());
-		$response->headers->set('Content-Disposition', 'filename="' . $fileObject->getOriginalName() . '"');
+		$response->headers->set('Content-Type', $fileObject->getMimeType());*/
+		$response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $fileObject->getGroup()->getFilename());
 
 		return $response;
 	}
@@ -79,18 +85,11 @@ class FileController extends Controller {
 	public function addFileAction(Request $request)
 	{
 		$em = $this->getDoctrine()->getManager();
-		$file = new File(
-			$this->getUser()
-			);
+		$file = new MultipleFile($this->getUser());
 
-		$form = $this
-			->get('form.factory')
-			->create(FileType::class, $file);
+		$form = $this->get('form.factory')->create(FileType::class, $file);
 
-		if (
-			$request->isMethod('POST') 
-			&& $form->handleRequest($request)->isValid()
-			) {
+		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 			
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($file);
@@ -111,14 +110,14 @@ class FileController extends Controller {
 	{
 		$em = $this->getDoctrine()->getManager();
 
-		if(null === $file = $em->getRepository('XifFileBundle:File')->find($id)) {
-			throw new NotFoundHttpException('Fichier inexistant');
+		if(null === $file = $em->getRepository('XifFileBundle:MultipleFile')->getWithFilesById($id)) {
+			throw $this->createNotFoundException('Fichier inexistant');
 		}
 
 		// utilisateur === propriétaire
 		if (!$this->getUser()->getId()== $file->getOwner()->getId()
 			|| ($admin && !$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN'))) {
-			throw new AccessDeniedException('Vous n\'êtes pas le propriétaire du fichier.');
+			throw $this->createAccessDeniedException('Vous n\'êtes pas le propriétaire du fichier.');
 		}
 
 		// suppression du fichier
@@ -135,19 +134,13 @@ class FileController extends Controller {
 	public function listAction()
 	{
 		// l'utilisateur connecté est administrateur
-		if (
-			!$this
-				->get('security.authorization_checker')
-				->isGranted('ROLE_ADMIN')
-				) {
-			throw new AccessDeniedException('Veuillez vous connecter en tant qu\'administrateur.');
-		}
+		$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Veuillez vous connecter en tant qu\'administrateur.');
 
 		$files = $this
 			->getDoctrine()
 			->getManager()
-			->getRepository('XifFileBundle:File')
-			->findAll();
+			->getRepository('XifFileBundle:MultipleFile')
+			->getAllWithFiles();
 
 		return $this->render(
 			'XifUserBundle:Admin:listFiles.html.twig',
@@ -162,7 +155,7 @@ class FileController extends Controller {
 		$files = $this
 			->getDoctrine()
 			->getManager()
-			->getRepository('XifFileBundle:File')
+			->getRepository('XifFileBundle:MultipleFile')
 			->findByOwner(
 				$this->getUser()
 				);
@@ -171,7 +164,7 @@ class FileController extends Controller {
 		foreach ($files as $file) {
 			$filesArray[] = array(
 					'id' => $file->getId(),
-					'name' => $file->getOriginalName()
+					'name' => $file->getFilename()
 				);
 		}
 
@@ -180,9 +173,22 @@ class FileController extends Controller {
 
 	public function getNameAction($id)
 	{
-		$file = $this->getDoctrine()->getManager()->getRepository('XifFileBundle:File')->find($id);
+		$file = $this->getDoctrine()->getManager()->getRepository('XifFileBundle:MultipleFile')->find($id);
 		if ($file === null)
-			throw $this->createNotFoundException('The file of id "'.$id.'" does not exist in database.');
-		return new Response($file->getOriginalName());
+			throw $this->createNotFoundException('The multifile of id "'.$id.'" does not exist in database.');
+		return new Response($file->getFilename());
+	}
+
+	public function audioSourcesAction($id)
+	{
+		$multifile = $this->getDoctrine()->getManager()->getRepository('XifFileBundle:MultipleFile')->getWithFilesById($id);
+		if ($multifile === null)
+			throw $this->createNotFoundException('Le groupe de fichiers n°'.$id.' n\'existe pas.');
+
+		return $this->render(
+			'XifFileBundle:File:audioSources.html.twig',
+			array(
+				'group' => $multifile,
+		));
 	}
 }

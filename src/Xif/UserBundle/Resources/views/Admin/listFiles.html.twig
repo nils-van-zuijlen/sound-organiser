@@ -11,22 +11,28 @@
 			<tr>
 				<th>Fichier</th>
 				<th>Propriétaire</th>
-				<th>Type Mime</th>
 				<th>Id</th>
+				<th>Preview</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
 		<tbody>
-			{% for file in files %}
+			{% for group in files %}
 				<tr>
-					<td><a href="{{ path('xif_file_get', {'id': file.id, 'admin': 'true'}) }}">{{ file.originalName }}</a></td>
-					<td>{{ file.owner.username }}</td>
-					<td>{{ file.mimeType }}</td>
-					<td>{{ file.id }}</td>
+					<td>{{ group.filename }}</td>
+					<td>{{ group.owner.username }}</td>
+					<td>{{ group.id }}</td>
 					<td>
-						<a href="{{ path('xif_user_mailuser', {'id': file.owner.id}) }}">Avertir</a><br>
+						<audio controls preload="none">
+							{% for file in group.files %}
+								<source src="{{ path('xif_file_get', {'id': file.id, 'admin': 'true'}) }}" type="{{ file.mimeType }}">
+							{% endfor %}
+						</audio>
+					</td>
+					<td>
+						<a href="{{ path('xif_user_mailuser', {'id': group.owner.id}) }}">Avertir</a><br>
 						{% if is_granted('ROLE_SUPER_ADMIN') %}
-							<a href="{{ path('xif_file_remove', {'id': file.id, 'admin': 'true'}) }}">Supprimer</a><br>
+							<a href="{{ path('xif_file_remove', {'id': group.id, 'admin': 'true'}) }}">Supprimer</a><br>
 						{% endif %}
 					</td>
 				</tr>

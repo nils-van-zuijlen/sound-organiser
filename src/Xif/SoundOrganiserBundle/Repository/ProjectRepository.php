@@ -28,4 +28,19 @@ class ProjectRepository extends EntityRepository {
 
 		return new Paginator($queryBuilder);
 	}
+
+	public function getWithSongLinesAndOwnerById($id)
+	{
+		$qb = $this->createQueryBuilder('p');
+
+		$qb->where('p.id = :id')
+			->setParameter('id', (int) $id);
+
+		$qb->leftJoin('p.songLines', 's')
+			->addSelect('s')
+			->leftJoin('p.owner', 'o')
+			->addSelect('o');
+
+		return $qb->getQuery()->getOneOrNullResult();
+	}
 }
