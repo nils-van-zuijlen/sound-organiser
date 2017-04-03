@@ -1,0 +1,5 @@
+{# src/Xif/FileBundle/Resources/views/File/audioSources.html.twig #}
+
+{% for file in group.files %}
+	<source src="{{ path('xif_file_get', {'id': file.id}) }}" type="{{ file.mimeType }}">
+{% endfor %}

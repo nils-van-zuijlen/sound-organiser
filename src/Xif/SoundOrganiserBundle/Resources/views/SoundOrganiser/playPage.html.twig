@@ -32,14 +32,7 @@
 
 			<div id="div_lecture">
 				<div id="lecteur">
-					<audio controls id="player" preload="auto">
-						<span title="Il ne supporte pas le HTML5">
-							Votre navigateur n'est pas à jour.
-						</span><br/>
-						<a href="//lmgtfy.com?q=Mettre+mon+navigateur+web+à+jour">
-							Comment le mettre à jour?
-						</a>
-					</audio><br/>
+					<audio controls id="player" preload="auto"></audio><br/>
 
 					<output id="song_title" class="song_title">
 						{{ project.songLines[0].name }}
@@ -74,7 +67,7 @@
 	<script src="{{ asset('bundles/xifsoundorganiser/playPage.js')}}"></script>
 	<script>
 		PROJECT = {{ project|json_encode(128)|raw }};
-		baseURL = "{{ path('xif_file_get_base')|raw }}";
+		baseURL = "{{ path('xif_file_audio_sources', {id: 0})|raw }}".slice(0, -2);
 		open_proj();
 	</script>
 </body>

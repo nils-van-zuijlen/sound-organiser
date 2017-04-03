@@ -87,3 +87,10 @@ fos_user:
             enabled: true
     service:
         mailer: fos_user.mailer.twig_swift
+
+# ffmpeg-bundle
+dubture_f_fmpeg:
+  ffmpeg_binary: /usr/bin/ffmpeg
+  ffprobe_binary: /usr/bin/ffprobe
+  binary_timeout: 0
+  threads_count: 1

@@ -17,7 +17,6 @@ use Xif\UserBundle\Entity\User;
  */
 class File
 {
-	const UPLOAD_ROOT_DIR = __DIR__.'/../Uploads/';
 
 	/**
 	 * @var int
@@ -39,26 +38,17 @@ class File
 	protected $mimeType;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="Xif\UserBundle\Entity\User", inversedBy="files")
+	 * @ORM\ManyToOne(targetEntity="Xif\FileBundle\Entity\MultipleFile", inversedBy="files", cascade="persist")
 	 * @ORM\JoinColumn(nullable=false)
 	 */
-	protected $owner;
+	protected $group;
 
 	/**
-	 * @ORM\Column(name="original_name", type="string", length=255)
+	 * Used in the delete process.
+	 * It stores the filename in order to delete it once the request is terminated.
+	 * @var string
 	 */
-	protected $originalName;
-
 	protected $tempFilename;
-
-	/**
-	 * @Assert\File(
-	 *     maxSize="10M",
-	 *     mimeTypes={"audio/mpeg", "audio/ogg"}
-	 *   )
-	 */
-	protected $file;
-	protected $potOwner;
 
 
 	/**
@@ -69,32 +59,6 @@ class File
 	public function getId()
 	{
 		return $this->id;
-	}
-
-	/**
-	 * Set owner
-	 *
-	 * @param \Xif\UserBundle\Entity\User $owner
-	 *
-	 * @return Project
-	 */
-	public function setOwner(User $owner)
-	{
-		$this->owner = $owner;
-
-		$owner->addFile($this);
-
-		return $this;
-	}
-
-	/**
-	 * Get owner
-	 *
-	 * @return \Xif\UserBundle\Entity\User
-	 */
-	public function getOwner()
-	{
-		return $this->owner;
 	}
 
 	/**
@@ -119,78 +83,6 @@ class File
 	public function getExtension()
 	{
 		return $this->extension;
-	}
-
-	public function __construct($user = null)
-	{
-		if ($user !== null) {
-			$this->potOwner = $user;
-		}
-	}
-
-	/**
-	 * Méthodes pour l'upload de fichiers
-	 */
-
-	public function getLocation()
-	{
-		return self::UPLOAD_ROOT_DIR . $this->id . '.' . $this->extension;
-	}
-
-	public function setFile(UploadedFile $file)
-	{
-		$this->file = $file;
-		
-		return $this;
-	}
-	public function getFile()
-	{
-		return $this->file;
-	}
-
-	/**
-	 * @ORM\PrePersist()
-	 */
-	public function preUpload()
-	{
-		$this->extension    = $this->file->guessExtension();
-		$this->mimeType     = $this->file->getMimeType();
-		$this->originalName = $this->file->getClientOriginalName();
-		$this->setOwner($this->potOwner);
-	}
-
-	/**
-	 * @ORM\PostPersist()
-	 */
-	public function upload()
-	{
-		$this->file->move(
-			self::UPLOAD_ROOT_DIR,
-			$this->id . '.' . $this->extension
-			);
-	}
-
-	/**
-	 * @ORM\PreRemove()
-	 */
-	public function preRemoveUpload()
-	{
-		// On sauvegarde temporairement le nom du fichier, car il dépend de l'id
-		$this->tempFilename = $this->getLocation();
-		// On supprime la relation avec le propriétaire
-		$this->owner->removeFile($this);
-		// On devrait supprimer la relation avec les songline
-	}
-
-	/**
-	 * @ORM\PostRemove()
-	 */
-	public function removeUpload()
-	{
-		// En PostRemove, on n'a pas accès à l'id, on utilise notre nom sauvegardé
-		if (file_exists($this->tempFilename)) {// On supprime le fichier
-			unlink($this->tempFilename);
-		}
 	}
 
 	/**
@@ -218,26 +110,70 @@ class File
 	}
 
 	/**
-	 * Set originalName
+	 * Set group
 	 *
-	 * @param string $originalName
+	 * @param \Xif\FileBundle\Entity\MultipleFile $group
 	 *
 	 * @return File
 	 */
-	public function setOriginalName($originalName)
+	public function setGroup(\Xif\FileBundle\Entity\MultipleFile $group)
 	{
-		$this->originalName = $originalName;
+		$this->group = $group;
 
 		return $this;
 	}
 
 	/**
-	 * Get originalName
+	 * Get group
 	 *
-	 * @return string
+	 * @return \Xif\FileBundle\Entity\MultipleFile
 	 */
-	public function getOriginalName()
+	public function getGroup()
 	{
-		return $this->originalName;
+		return $this->group;
+	}
+
+	/**
+	 * Méthodes pour l'upload de fichiers
+	 */
+
+	public function getLocation()
+	{
+		return MultipleFile::UPLOAD_ROOT_DIR . $this->group->getId() . '.' . $this->extension;
+	}
+
+	public function preUpload(UploadedFile $file)
+	{
+		$this->extension = $file->guessExtension();
+		$this->mimeType  = $file->getMimeType();
+	}
+
+	public function upload(UploadedFile $file)
+	{
+		$file->move(
+			MultipleFile::UPLOAD_ROOT_DIR,
+			$this->group->getId() . '.' . $this->extension
+			);
+		print('"'.$this->group->getId().'"');
+	}
+
+	/**
+	 * @ORM\PreRemove()
+	 */
+	public function preRemoveUpload()
+	{
+		// On sauvegarde temporairement le nom du fichier, car il dépend de l'id
+		$this->tempFilename = $this->getLocation();
+	}
+
+	/**
+	 * @ORM\PostRemove()
+	 */
+	public function removeUpload()
+	{
+		// En PostRemove, on n'a pas accès à l'id, on utilise notre nom sauvegardé
+		if (file_exists($this->tempFilename)) {// On supprime le fichier
+			unlink($this->tempFilename);
+		}
 	}
 }

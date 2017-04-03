@@ -68,10 +68,10 @@ class SongLine implements \JsonSerializable
 	protected $project;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="Xif\FileBundle\Entity\File")
+	 * @ORM\ManyToOne(targetEntity="Xif\FileBundle\Entity\MultipleFile")
 	 * @ORM\JoinColumn(nullable=true)
 	 */
-	protected $file;
+	protected $multipleFile;
 
 
 	/**
@@ -229,27 +229,27 @@ class SongLine implements \JsonSerializable
 	}
 
 	/**
-	 * Set file
+	 * Set multipleFile
 	 *
-	 * @param \Xif\FileBundle\Entity\File $file
+	 * @param \Xif\FileBundle\Entity\MultipleFile $multipleFile
 	 *
 	 * @return SongLine
 	 */
-	public function setFile(\Xif\FileBundle\Entity\File $file = null)
+	public function setMultipleFile(\Xif\FileBundle\Entity\MultipleFile $multipleFile = null)
 	{
-		$this->file = $file;
+		$this->multipleFile = $multipleFile;
 
 		return $this;
 	}
 
 	/**
-	 * Get file
+	 * Get multipleFile
 	 *
-	 * @return \Xif\FileBundle\Entity\File
+	 * @return \Xif\FileBundle\Entity\MultipleFile
 	 */
-	public function getFile()
+	public function getMultipleFile()
 	{
-		return $this->file;
+		return $this->multipleFile;
 	}
 
 	/**
@@ -280,7 +280,7 @@ class SongLine implements \JsonSerializable
 	{
 		$array = array(
 			'name'  => $this->name,
-			'file'  => ($this->file === null) ? false : $this->file->getId(),
+			'file'  => ($this->multipleFile === null) ? false : $this->multipleFile->getId(),
 			'vol'   => $this->vol,
 			'trans' => array(
 				$this->type,

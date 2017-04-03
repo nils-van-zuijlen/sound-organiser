@@ -163,13 +163,13 @@ class SoundOrganiserController extends Controller {
 					if (null === $file = $this
 						->getDoctrine()
 						->getManager()
-						->getRepository('XifFileBundle:File')
+						->getRepository('XifFileBundle:MultipleFile')
 						->find( (int) $POST->get('file'))
 						) {
 						throw $this->createNotFoundException('Ligne inexistante.');
 					}
 
-					$songLine->setFile($file);
+					$songLine->setMultipleFile($file);
 					$entityManager->flush();
 					return new Response(null);
 				}

@@ -24,7 +24,7 @@ class User extends BaseUser {
 	protected $projects;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="Xif\FileBundle\Entity\File", mappedBy="owner", cascade="remove")
+	 * @ORM\OneToMany(targetEntity="Xif\FileBundle\Entity\MultipleFile", mappedBy="owner", cascade="remove")
 	 */
 	protected $files;
 
@@ -71,11 +71,11 @@ class User extends BaseUser {
     /**
      * Add file
      *
-     * @param \Xif\FileBundle\Entity\File $file
+     * @param \Xif\FileBundle\Entity\MultipleFile $file
      *
      * @return User
      */
-    public function addFile(\Xif\FileBundle\Entity\File $file)
+    public function addFile(\Xif\FileBundle\Entity\MultipleFile $file)
     {
         $this->files[] = $file;
 
@@ -85,9 +85,9 @@ class User extends BaseUser {
     /**
      * Remove file
      *
-     * @param \Xif\FileBundle\Entity\File $file
+     * @param \Xif\FileBundle\Entity\MultipleFile $file
      */
-    public function removeFile(\Xif\FileBundle\Entity\File $file)
+    public function removeFile(\Xif\FileBundle\Entity\MultipleFile $file)
     {
         $this->files->removeElement($file);
     }

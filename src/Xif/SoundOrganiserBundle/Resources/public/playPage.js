@@ -499,17 +499,33 @@ function load_song(NUM, autoplay) {
 	//modif du volume du lecteur
 	player.volume = SONG.vol;
 	//chargement en fonction du type
-	if (
-		SONG.trans[0] == '1'
-		|| SONG.trans[0] == '&'
-		|| SONG.trans[0] == 'O'
-		) {
+	if (SONG.file) {
+		if (
+			SONG.trans[0] == '1'
+			|| SONG.trans[0] == '&'
+			|| SONG.trans[0] == 'O'
+			) {
 
-		player.src = SONG.file ? baseURL + '/' + SONG.file : player.src;
+			var xhr = new XMLHttpRequest;
+			xhr.open('GET', baseURL+'/'+SONG.file);
+			xhr.addEventListener('readystatechange', function() {
+				if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+					player.innerHTML = xhr.responseText;
+				}
+			});
+			xhr.send(null);
 
-	} else {
-		//la piste à lire est choisie aléatoirement parmi celles disponibles dans le fichier
-		player.src = random_src();
+		} else {
+			//la piste à lire est choisie aléatoirement parmi celles disponibles dans le fichier
+			var xhr = new XMLHttpRequest;
+			xhr.open('GET', random_src());
+			xhr.addEventListener('readystatechange', function() {
+				if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+					player.innerHTML = xhr.responseText;
+				}
+			});
+			xhr.send(null);
+		}
 	}
 
 	//dans le cas d'un autoplay==true
