@@ -20,7 +20,6 @@ use Xif\FileBundle\Entity\File;
 use Xif\FileBundle\Entity\MultipleFile;
 // classes ORM de bundles externes
 use Xif\UserBundle\Entity\User;
-use Xif\SoundOrganiserBundle\Entity\Project;
 // classes formulaires du bundle
 use Xif\FileBundle\Form\Type\FileType;
 
@@ -31,6 +30,8 @@ class FileController extends Controller {
 	
 	/**
 	 * Récupérer un fichier enregistré en BDD
+	 *
+	 * @Security("has_role('IS_AUTHENTICATED_REMEMBERED')")
 	 * 
 	 * @param  integer $id      Id du fichier demandé
 	 * @param  boolean $admin   Mode administrateur
@@ -81,6 +82,7 @@ class FileController extends Controller {
 	 * Ajouter un fichier à ses projets
 	 *
 	 * @param Request $request Requète de l'utilisateur
+	 * @Security("has_role('IS_AUTHENTICATED_REMEMBERED')")
 	 */
 	public function addFileAction(Request $request)
 	{
@@ -106,6 +108,9 @@ class FileController extends Controller {
 			);
 	}
 
+	/**
+	 * @Security("has_role('IS_AUTHENTICATED_REMEMBERED')")
+	 */
 	public function removeFileAction($id, $admin)
 	{
 		$em = $this->getDoctrine()->getManager();
@@ -131,11 +136,11 @@ class FileController extends Controller {
 		return new Response('File deleted');
 	}
 
+	/**
+	 * @Security("has_role('ROLE_ADMIN')")
+	 */
 	public function listAction()
 	{
-		// l'utilisateur connecté est administrateur
-		$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Veuillez vous connecter en tant qu\'administrateur.');
-
 		$files = $this
 			->getDoctrine()
 			->getManager()
@@ -150,6 +155,9 @@ class FileController extends Controller {
 			);
 	}
 
+	/**
+	 * @Security("has_role('IS_AUTHENTICATED_REMEMBERED')")
+	 */
 	public function getMineAction(Request $request)
 	{
 		$files = $this
@@ -171,6 +179,9 @@ class FileController extends Controller {
 		return new JsonResponse($filesArray);
 	}
 
+	/**
+	 * @Security("has_role('IS_AUTHENTICATED_REMEMBERED')")
+	 */
 	public function getNameAction($id)
 	{
 		$file = $this->getDoctrine()->getManager()->getRepository('XifFileBundle:MultipleFile')->find($id);
