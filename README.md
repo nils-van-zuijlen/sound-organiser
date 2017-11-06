@@ -1,6 +1,8 @@
 SoundOrganiser
 ==============
 
+[![Dependency Status](https://gemnasium.com/badges/github.com/nils-van-zuijlen/sound-organiser.svg)](https://gemnasium.com/github.com/nils-van-zuijlen/sound-organiser)
+
 A __Symfony__ project created on June 6, 2016, 11:44 am.
 
 It was not a git repository at that time.
